@@ -3,10 +3,6 @@
         {
             "name": "Alpha",
             "FAA_ID": "FA3FCCE4KC"
-        },
-        {
-            "name": "Beta",
-            "FAA_ID": "FA3FCCE4KC"
         }
     ],
     "sensor_types": [
@@ -20,23 +16,11 @@
             "type": "air"
         },
         {
-            "name": "air2",
-            "type": "air"
-        },
-        {
             "name": "GPS1",
             "type": "GPS"
         },
         {
-            "name": "GPS2",
-            "type": "GPS"
-        },
-        {
             "name": "RF1",
-            "type": "RF"
-        },
-        {
-            "name": "RF2",
             "type": "RF"
         }
     ],
