@@ -30,6 +30,7 @@ new_mission = Mission(name=setup['mission_name'],
                    location=setup['location'])
 
 drone_names = [drone['name'] for drone in setup['drones']]
+print(length(setup['drones']))
 drones = session.query(
             Drone
          ).filter(
