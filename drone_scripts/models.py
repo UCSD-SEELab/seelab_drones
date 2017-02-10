@@ -278,7 +278,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     db_name = 'mission_data'
     if args.local:
-        db_url = 'mysql+mysqldb://root:password@localhost/' + db_name
+        db_url = 'mysql+mysqldb://root:see2148@localhost/' + db_name
     else:
         db_url = 'mysql+mysqldb://drone:drone1@192.168.1.36/' + db_name
     engine = create_engine(db_url)
