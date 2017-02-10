@@ -1,0 +1,11 @@
+{
+    "mission_name":"test",
+    "location":"CSE2115",
+    "drones": [
+        {
+            "name": "Alpha",
+            "sensors": ["air1", "GPS1", "RF1"]
+        }
+    ]
+}
+
