@@ -34,6 +34,8 @@ from sqlalchemy.dialects.mysql import DOUBLE
 from sqlalchemy.orm import relationship, sessionmaker, backref, aliased
 
 Base = declarative_base()
+local_user = 'root'
+local_password = 'see2148'
 
 #sneaky regex
 def snake_case(string):
@@ -278,7 +280,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     db_name = 'mission_data'
     if args.local:
-        db_url = 'mysql+mysqldb://root:see2148@localhost/' + db_name
+        db_url = 'mysql+mysqldb://%s:%s@localhost/%s' %  (local_user, local_password, db_name)
     else:
         db_url = 'mysql+mysqldb://drone:drone1@192.168.1.36/' + db_name
     engine = create_engine(db_url)
