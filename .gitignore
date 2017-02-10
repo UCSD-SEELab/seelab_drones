@@ -1,0 +1,7 @@
+*.bak
+mav.*
+*.pyc
+*.csv
+*.swp
+machine_config.py
+.DS_Store*
