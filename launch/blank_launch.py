@@ -7,11 +7,10 @@ import dronekit
 import time
 from os import sys, path, pardir
 
-parent_dir = path.abspath(pardir)
-path = parent_dir + '/drone_scripts'
+# importing drone_control was broken before...
+path = path.abspath(pardir) + '/drone_scripts'
 sys.path.append(path)
 import drone_control
-#from .. import drone_scripts\drone_control
 
 SIMULATED=True
 SIM_AIR_SENSOR=True
