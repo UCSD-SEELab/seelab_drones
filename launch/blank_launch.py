@@ -5,7 +5,7 @@ import drone_control
 '''
 import dronekit
 import time
-from os import sys, path
+from os import sys, path, pardir
 
 parent_dir = path.abspath(pardir)
 path = parent_dir + '/drone_scripts'
