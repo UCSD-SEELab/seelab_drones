@@ -3,9 +3,12 @@ import sys
 sys.path.insert(0, '/home/pi/drone_python/drone_scripts')
 import drone_control
 '''
-from drone_scripts import drone_control
 import dronekit
 import time
+import os.path
+parent_dir = os.path.abspath(os.pardir)
+print(parent_dir)
+from drone_scripts import drone_control
 
 SIMULATED=True
 SIM_AIR_SENSOR=True
