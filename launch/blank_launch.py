@@ -9,6 +9,7 @@ import os.path
 
 parent_dir = os.path.abspath(os.pardir)
 path = parent_dir + '/drone_scripts'
+print parent_dir
 from .. import drone_scripts\drone_control
 
 SIMULATED=True
