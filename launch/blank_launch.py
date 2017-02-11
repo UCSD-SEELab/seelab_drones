@@ -6,8 +6,10 @@ import drone_control
 import dronekit
 import time
 import os.path
+
 parent_dir = os.path.abspath(os.pardir)
-print(parent_dir)
+path = parent_dir + / drone_scripts
+print(path)
 from drone_scripts import drone_control
 
 SIMULATED=True
