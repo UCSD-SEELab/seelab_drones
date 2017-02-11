@@ -1,4 +1,10 @@
 import dronekit
+
+from os import sys, path, pardir
+
+# importing drone_control was broken before...
+path = path.abspath(pardir) + '/drone_scripts'
+sys.path.append(path)
 import drone_control
 
 SIMULATED=False
