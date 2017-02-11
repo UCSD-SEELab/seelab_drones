@@ -9,6 +9,7 @@ from os import sys, path
 
 parent_dir = path.abspath(os.pardir)
 path = parent_dir + '/drone_scripts'
+sys.path.append(path)
 from ..drone_scripts import drone_control
 #from .. import drone_scripts\drone_control
 
