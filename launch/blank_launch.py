@@ -8,8 +8,8 @@ import time
 import os.path
 
 parent_dir = os.path.abspath(os.pardir)
-path = parent_dir + '/drone_scripts'
-from path import drone_control
+path = parent_dir + '/drone_scripts/drone_control'
+import path
 
 SIMULATED=True
 SIM_AIR_SENSOR=True
