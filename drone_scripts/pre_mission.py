@@ -55,13 +55,13 @@ for drone in setup['drones']:
         ).filter(
             Drone.name == name,
             Mission.name == setup['mission_name']
-        ).one()
+        ).first()
 
         sensor = session.query(
             Sensor,
         ).filter(
             Sensor.name == sensor_name,
-        ).one()
+        ).first()
 
         mission_drone.sensors.append(sensor)
 
