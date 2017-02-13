@@ -205,7 +205,7 @@ class LoggerDaemon(threading.Thread):
         if machine == 'laptop':
             db_url = 'mysql+mysqldb://%s:%s@localhost/%s' % (local_user, local_password, db_name)
         elif machine == 'drone':
-            db_url = 'mysql+mysqldb://dronebs:password@192.168.1.88/' + db_name
+            db_url = 'mysql+mysqldb://%s:%s@192.168.1.36/%s' % (local_user, local_password, db_name)
         else:
             print ("machine not recognized, attempting to connect to database"+
                   " locally (this will probably error)...")
