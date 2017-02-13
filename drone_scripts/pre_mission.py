@@ -46,7 +46,6 @@ for drone in setup['drones']:
     name = drone['name']
     sensors = drone['sensors']
     for sensor_name in sensors:
-        print(sensor_name)
         mission_drone = session.query(
             MissionDrone,
         ).join(
