@@ -46,7 +46,7 @@ for drone in setup['drones']:
     name = drone['name']
     sensors = drone['sensors']
     for sensor_name in sensors:
-
+        print(sensor_name)
         mission_drone = session.query(
             MissionDrone,
         ).join(
@@ -55,13 +55,13 @@ for drone in setup['drones']:
         ).filter(
             Drone.name == name,
             Mission.name == setup['mission_name']
-        ).first()
+        ).one()
 
         sensor = session.query(
             Sensor,
         ).filter(
             Sensor.name == sensor_name,
-        ).first()
+        ).one()
 
         mission_drone.sensors.append(sensor)
 
