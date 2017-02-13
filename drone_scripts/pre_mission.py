@@ -21,7 +21,8 @@ with open('../database_files/mission_setup.json') as fp:
 db_name = 'mission_data'
 local_user = 'root'
 local_password = 'see2148'
-db_url = 'mysql+mysqldb://root:password@localhost/' + db_name
+db_url = 'mysql+mysqldb://%s:%s@localhost/%s' %  (local_user, local_password, db_name)
+# db_url = 'mysql+mysqldb://root:password@localhost/' + db_name
 engine = create_engine(db_url)
 Session = sessionmaker(bind=engine)
 session = Session()
