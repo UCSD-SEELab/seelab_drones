@@ -201,7 +201,7 @@ class LoggerDaemon(threading.Thread):
         import machine_config
         if machine == 'laptop':
         '''
-        machine = 'laptop'
+        machine = 'drone'
         if machine == 'laptop':
             db_url = 'mysql+mysqldb://%s:%s@localhost/%s' % (local_user, local_password, db_name)
         elif machine == 'drone':
