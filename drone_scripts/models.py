@@ -34,6 +34,7 @@ from sqlalchemy.dialects.mysql import DOUBLE
 from sqlalchemy.orm import relationship, sessionmaker, backref, aliased
 
 Base = declarative_base()
+# database username/password. Change these to whatever was set on base station
 local_user = 'root'
 local_password = 'see2148'
 
