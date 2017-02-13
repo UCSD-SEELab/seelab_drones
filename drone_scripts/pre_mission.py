@@ -19,6 +19,7 @@ with open('../database_files/mission_setup.json') as fp:
     setup = json.load(fp)
 
 db_name = 'mission_data'
+print(models.local_user)
 local_user = 'root'
 local_password = 'see2148'
 db_url = 'mysql+mysqldb://%s:%s@localhost/%s' %  (local_user, local_password, db_name)
