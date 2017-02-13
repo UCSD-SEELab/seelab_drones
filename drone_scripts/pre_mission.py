@@ -30,6 +30,7 @@ session = Session()
 new_mission = Mission(name=setup['mission_name'],
                    date=datetime.now(),
                    location=setup['location'])
+session.commit()
 
 drone_names = [drone['name'] for drone in setup['drones']]
 drones = session.query(
