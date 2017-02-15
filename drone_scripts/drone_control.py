@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Provide the main classes for the drone-based part of the project.
 
