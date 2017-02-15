@@ -538,7 +538,7 @@ class Pilot(object):
             if cnt > 10 and self.vehicle.gps_0.fix_type < 2:
                 print("bad gps reading. Breaking out of loops")
                 self.vehicle.parameters['ARMING_CHECK']=-9
-                sleep(0.2)
+                time.sleep(0.2)
                 print("arming check: " + self.vehicle.parameters['ARMING_CHECK'])
                 break
             ### END TEST ONLY
