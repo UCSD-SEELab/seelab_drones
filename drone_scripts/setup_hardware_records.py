@@ -22,7 +22,7 @@ with open('../database_files/drones_and_sensors.json') as fp:
 
 # Setup the database connection.
 db_name = 'mission_data'
-db_url = 'mysql+mysqldb://root:password@localhost/' + db_name
+db_url = 'mysql+mysqldb://%s:%s@localhost/%s' % (local_user, local_password, db_name)
 engine = create_engine(db_url)
 Session = sessionmaker(bind=engine)
 session = Session()
