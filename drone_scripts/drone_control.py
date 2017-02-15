@@ -565,7 +565,7 @@ class Pilot(object):
                 break
             ### END TEST ONLY
 
-        print "Taking off!"
+        print("Taking off! Target altitude is %f meters" % target_alt)
         self.vehicle.simple_takeoff(target_alt)  # Take off to target alt
 
         # Wait until the self.vehicle reaches a safe height before processing
