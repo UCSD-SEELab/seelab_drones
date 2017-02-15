@@ -527,10 +527,15 @@ class Pilot(object):
         self.hold_altitude = target_alt
         print "Basic pre-arm checks"
         # Don't try to arm until autopilot is ready
+        cnt = 0
         while not self.vehicle.is_armable:
             print " Waiting for vehicle {0} to initialise...".format(self.instance)
             print(self.vehicle.gps_0.fix_type)
             time.sleep(1.0 / Pilot.sim_speedup)
+            cnt += 1
+            if cnt > 10 and self.vehicle.gps_0.fix_type < 2:
+                print("bad gps reading. Breaking out of loops")
+                break
 
         print "Getting vehicle commands"
         cmds = self.vehicle.commands
