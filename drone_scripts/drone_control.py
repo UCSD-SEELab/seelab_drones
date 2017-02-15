@@ -539,7 +539,7 @@ class Pilot(object):
                 print("bad gps reading. Breaking out of loops")
                 self.vehicle.parameters['ARMING_CHECK']=-9
                 time.sleep(0.2)
-                print("arming check: " + self.vehicle.parameters['ARMING_CHECK'])
+                print("arming check: " + str(self.vehicle.parameters['ARMING_CHECK']))
                 break
             ### END TEST ONLY
             #'''
