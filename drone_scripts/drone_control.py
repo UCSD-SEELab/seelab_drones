@@ -412,7 +412,7 @@ class Pilot(object):
     """Provide basic piloting functionality and interface to sensors.
 
     This class is intended to contain all the basic fuctionality of flying the
-    drone from place to place, interfacing with sensors, and acessing/updating
+    drone from place to place, interfacing with sensors, and accessing/updating
     the information in dronekit's vehicle object (which in turn is the API used
     to interact with the instance of ardupilot running on the drone).
     
@@ -508,6 +508,7 @@ class Pilot(object):
                              use_saved_data=True,
                              wd=working_dir)
             self.vehicle = dronekit.connect(connection_string, wait_ready=True)
+            print("hello")
             print vehicle
         else:
             # Connect to existing vehicle
