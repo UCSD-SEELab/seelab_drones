@@ -41,6 +41,7 @@ from flask import Flask, request
 from contextlib import contextmanager
 from collections import deque
 
+#!/usr/bin/env bash
 
 app = Flask(__name__)
 
