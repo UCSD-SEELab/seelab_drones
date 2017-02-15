@@ -12,7 +12,9 @@ path = path.abspath(pardir) + '/drone_scripts'
 sys.path.append(path)
 import drone_control
 
-SIMULATED=True
+# Set SIMULATED=False if running on Pi. Set sensor values to false if sensors
+# are on drone. Set to true if not on drone to use dummy data
+SIMULATED=False
 SIM_AIR_SENSOR=True
 SIM_RF_SENSOR=True
 
