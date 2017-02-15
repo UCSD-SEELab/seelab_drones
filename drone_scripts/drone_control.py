@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Provide the main classes for the drone-based part of the project.
 
@@ -40,8 +41,6 @@ from pubsub import pub
 from flask import Flask, request
 from contextlib import contextmanager
 from collections import deque
-
-#!/usr/bin/env bash
 
 app = Flask(__name__)
 
