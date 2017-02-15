@@ -508,7 +508,6 @@ class Pilot(object):
                              use_saved_data=True,
                              wd=working_dir)
             self.vehicle = dronekit.connect(connection_string, wait_ready=True)
-            print("hello")
             print vehicle
         else:
             # Connect to existing vehicle
