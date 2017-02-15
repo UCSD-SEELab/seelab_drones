@@ -529,6 +529,7 @@ class Pilot(object):
         # Don't try to arm until autopilot is ready
         while not self.vehicle.is_armable:
             print " Waiting for vehicle {0} to initialise...".format(self.instance)
+            print(self.vehicle.gps_0.fix_type)
             time.sleep(1.0 / Pilot.sim_speedup)
 
         print "Getting vehicle commands"
