@@ -552,11 +552,18 @@ class Pilot(object):
         self.vehicle.armed = True
 
         # Confirm vehicle armed before attempting to take off
+        cnt = 0
         while not self.vehicle.armed:
             print " Waiting for vehicle {0} to arm...".format(self.instance)
             self.vehicle.mode = VehicleMode("GUIDED")
             self.vehicle.armed = True
             time.sleep(1.0 / Pilot.sim_speedup)
+            ### TEST ONLY BELOW
+            cnt += 1
+            if cnt > 10 and self.vehicle.gps_0.fix_type < 2:
+                print("bad gps reading. Breaking out of arming loops")
+                break
+            ### END TEST ONLY
 
         print "Taking off!"
         self.vehicle.simple_takeoff(target_alt)  # Take off to target alt
