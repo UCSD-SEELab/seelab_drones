@@ -530,7 +530,7 @@ class Pilot(object):
         cnt = 0
         while not self.vehicle.is_armable:
             print " Waiting for vehicle {0} to initialise...".format(self.instance)
-            print(self.vehicle.gps_0.fix_type)
+            # print(self.vehicle.gps_0.fix_type)
             time.sleep(1.0 / Pilot.sim_speedup)
             ### TEST ONLY BELOW
             #'''
