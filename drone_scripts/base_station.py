@@ -286,7 +286,7 @@ class DroneCoordinator(object):
     def establish_database_connection(self):
         """Setup the database connection through the sqlalchemy interface."""
         db_name = 'mission_data'
-        db_url = 'mysql+mysqldb://root:password@localhost/' + db_name
+        db_url = 'mysql+mysqldb://%s:%s@localhost/%s' % (local_user, local_password, db_name)
         self.engine = create_engine(db_url)
         self.Session = sessionmaker(bind=self.engine)
 
