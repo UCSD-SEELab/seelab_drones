@@ -532,10 +532,12 @@ class Pilot(object):
             print " Waiting for vehicle {0} to initialise...".format(self.instance)
             print(self.vehicle.gps_0.fix_type)
             time.sleep(1.0 / Pilot.sim_speedup)
+            ### TEST ONLY BELOW
             cnt += 1
             if cnt > 10 and self.vehicle.gps_0.fix_type < 2:
                 print("bad gps reading. Breaking out of loops")
                 break
+            ### END TEST ONLY
 
         print "Getting vehicle commands"
         cmds = self.vehicle.commands
