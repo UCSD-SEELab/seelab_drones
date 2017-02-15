@@ -765,6 +765,7 @@ class Navigator(object):
                 simulated_RF_sensor=self.simulated_RF_sensor,
                 simulated_air_sensor=self.simulated_air_sensor,
         )
+        print("Bringup ip: ")
         print(self.bringup_ip)
         self.pilot.bringup_drone(connection_string=self.bringup_ip)
 
