@@ -151,16 +151,16 @@ class rxSDR(threading.Thread):
 
         # radio = rxSDR(30, fs, bw, gain)  # radio on RPi
         # fc_list = np.linspace(fcLow, fcHigh, ((fcHigh - fcLow)/(SCAN_RES*fs) + 1))
-        radio = self.sdr
+        # radio = self.sdr
 
         if SAVE:
             with open(FILENAME, 'a') as file:
                 file.write('fl,%f,fh,%f,fs,%f,mhz,gain,%s,nfft,%d,scan,%f'%(fcLow,fcHigh,fs,gain,NFFT,SCAN_RES)+'\n')
         now = time.time()
         for x in fc_list:
-            radio.setFc(x, "mhz")
+            self.setFc(x, "mhz")
             if ((time.time() - now) < 0.025): time.sleep(0.025 - (time.time()-now)) # allow PLL to settle
-            freqs = radio.getFrequencies(NFFT)
+            freqs = self.getFrequencies(NFFT)
             if SAVE:
                 with open(FILENAME, 'a') as f:
                     f.write(','.join(map(str, np.round(freqs, NUM_DECIMAL))) + '\n')
