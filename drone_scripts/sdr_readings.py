@@ -37,12 +37,17 @@ RX_MIN_FREQ = 22 * mhz
 class rxSDR(threading.Thread):
 
     def __init__(self, fc, fs, bw, gain):
+        super(rxSDR, self).__init__()
+        self._delay = 5
+        self.daemon = True
+        # Configure SDR parameters
         self.sdr = rtl.RtlSdr()
         sleep(1)
         self.setGain(gain)
         self.setFc(fc, "mhz")
         self.setFs(fs, "mhz")
-        # self.setBwKhz(bw)
+        
+        self.start()
 
     def setBwKhz(self, bw_khz):     # does not work for some reason?
         self.sdr.set_bandwidth(bw_khz*khz)
