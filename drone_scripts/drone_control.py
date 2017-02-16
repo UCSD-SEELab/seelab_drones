@@ -534,17 +534,6 @@ class Pilot(object):
             time.sleep(1.0 / Pilot.sim_speedup)
             if self.vehicle.gps_0.fix_type < 2:
                 print("     Vehicle {0} waiting for GPS fix...".format(self.instance))
-            ### TEST ONLY BELOW
-            '''
-            cnt += 1
-            if cnt > 10 and self.vehicle.gps_0.fix_type < 2:
-                print("bad gps reading. Breaking out of loops")
-                self.vehicle.parameters['ARMING_CHECK']=-9
-                time.sleep(0.2)
-                print("arming check: " + str(self.vehicle.parameters['ARMING_CHECK']))
-                break
-            ### END TEST ONLY
-            '''
 
         print "Getting vehicle commands"
         cmds = self.vehicle.commands
@@ -565,14 +554,6 @@ class Pilot(object):
             self.vehicle.mode = VehicleMode("GUIDED")
             self.vehicle.armed = True
             time.sleep(1.0 / Pilot.sim_speedup)
-            ### TEST ONLY BELOW
-            '''
-            cnt += 1
-            if cnt > 10 and self.vehicle.gps_0.fix_type < 2:
-                print("bad gps reading. Breaking out of arming loops")
-                break
-            ### END TEST ONLY
-            '''
 
         print("Taking off! Target altitude is %f meters" % target_alt)
         self.vehicle.simple_takeoff(target_alt)  # Take off to target alt
