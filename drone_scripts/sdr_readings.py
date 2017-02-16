@@ -28,11 +28,24 @@ This version of the file tries to use threading to integrate with drone
 import rtlsdr as rtl
 import numpy as np
 from time import sleep
+import time
 import threading
 
 mhz = 1000000.0
 khz = 1000.0
 RX_MIN_FREQ = 22 * mhz
+np.set_printoptions(precision=4)
+
+fcLow = 30
+fcHigh = 50
+fs = 2.5
+bw = 300
+gain = 'auto'
+NFFT = 1024
+SAVE = False
+FILENAME = "fullRange_2_5mhz.txt"
+NUM_DECIMAL = 3
+SCAN_RES = 1
 
 class rxSDR(threading.Thread):
 
@@ -130,28 +143,8 @@ class rxSDR(threading.Thread):
     
     def get_reading(self):
         '''
-        Author: Stephen Wayne
-        This file exists mostly to test features that I add to the rxSDR class
+        This function tests features that I add to the rxSDR class
         '''
-
-        import sdrClass
-        import numpy as np
-        import time
-        import drone_control
-        import dronekit
-
-        np.set_printoptions(precision=4)
-
-        fcLow = 30
-        fcHigh = 50
-        fs = 2.5
-        bw = 300
-        gain = 'auto'
-        NFFT = 1024
-        SAVE = False
-        FILENAME = "fullRange_2_5mhz.txt"
-        NUM_DECIMAL = 3
-        SCAN_RES = 1
 
         radio = sdrClass.rxSDR(30, fs, bw, gain)  # radio on RPi
         connection_string = "tcp:127.0.0.1:{0}".format(5760 + 10 * 1)
