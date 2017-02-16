@@ -35,6 +35,7 @@ import time
 import sys
 import hardware
 import rf_readings
+import sdr_readings
 import csv
 from pubsub import pub
 from flask import Flask, request
@@ -456,6 +457,8 @@ class Pilot(object):
         self.sitl = None
         hardware.AirSensor(simulated=simulated_air_sensor)
         rf_readings.RSSISensor(simulated=simulated_RF_sensor)
+        # Test out adding SDR
+        sdr_readings.rxSDR()
 
         LoggerDaemon(self, "Alpha")
 
