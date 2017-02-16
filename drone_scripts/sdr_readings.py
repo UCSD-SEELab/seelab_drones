@@ -151,6 +151,7 @@ class rxSDR(threading.Thread):
 
         # radio = rxSDR(30, fs, bw, gain)  # radio on RPi
         # fc_list = np.linspace(fcLow, fcHigh, ((fcHigh - fcLow)/(SCAN_RES*fs) + 1))
+        radio = self.sdr
 
         if SAVE:
             with open(FILENAME, 'a') as file:
