@@ -124,3 +124,6 @@ class rxSDR(threading.Thread):
         # convert to  dB
         freqs = 20.0*np.log10(freqs)
         return freqs
+    
+    def _callback(self, sdr_data):
+        pub.sendMessage("sensor-messages.sdr_data", arg1 = sdr_data)
