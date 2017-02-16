@@ -35,8 +35,9 @@ from sqlalchemy.orm import relationship, sessionmaker, backref, aliased
 
 Base = declarative_base()
 # database username/password. Change these to whatever was set on base station
-local_user = 'root'
+local_user =     'root'
 local_password = 'see2148'
+db_ip_addr =     '192.168.1.36'   # address of your database laptop on network
 
 #sneaky regex
 def snake_case(string):
@@ -283,7 +284,8 @@ if __name__ == '__main__':
     if args.local:
         db_url = 'mysql+mysqldb://%s:%s@localhost/%s' %  (local_user, local_password, db_name)
     else:
-        db_url = 'mysql+mysqldb://drone:drone1@192.168.1.36/' + db_name
+        db_url = 'mysql+mysqldb://%s:%s@%s/%s' % (local_user, local_password, db_ip_addr, db_name)
+		# db_url = 'mysql+mysqldb://drone:drone1@192.168.1.36/' + db_name
     engine = create_engine(db_url)
     Base.metadata.create_all(engine)
     if args.fuss:
