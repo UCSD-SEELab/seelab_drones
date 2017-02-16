@@ -532,6 +532,8 @@ class Pilot(object):
             print " Waiting for vehicle {0} to initialise...".format(self.instance)
             # print(self.vehicle.gps_0.fix_type)
             time.sleep(1.0 / Pilot.sim_speedup)
+            if self.vehicle.gps_0.fix_type < 2:
+                print("Vehicle {0} waiting for GPS fix...".format(self.instance))
             ### TEST ONLY BELOW
             '''
             cnt += 1
