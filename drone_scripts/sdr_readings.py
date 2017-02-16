@@ -28,12 +28,13 @@ This version of the file tries to use threading to integrate with drone
 import rtlsdr as rtl
 import numpy as np
 from time import sleep
+import threading
 
 mhz = 1000000.0
 khz = 1000.0
 RX_MIN_FREQ = 22 * mhz
 
-class rxSDR:
+class rxSDR(threading.Thread):
 
     def __init__(self, fc, fs, bw, gain):
         self.sdr = rtl.RtlSdr()
