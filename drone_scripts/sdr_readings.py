@@ -146,7 +146,7 @@ class rxSDR(threading.Thread):
         This function tests features that I add to the rxSDR class
         '''
 
-        radio = sdrClass.rxSDR(30, fs, bw, gain)  # radio on RPi
+        radio = rxSDR(30, fs, bw, gain)  # radio on RPi
         connection_string = "tcp:127.0.0.1:{0}".format(5760 + 10 * 1)
         # vehicle = dronekit.connect(connection_string, wait_ready= True)
 
@@ -167,6 +167,7 @@ class rxSDR(threading.Thread):
 
     
     def run(self):
+        
         while True:
             data = self.get_reading()             # get the frequency data
             if data is not None:                  # if successful
