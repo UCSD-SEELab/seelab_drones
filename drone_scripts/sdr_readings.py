@@ -144,7 +144,7 @@ class rxSDR(threading.Thread):
     def _callback(self, sdr_data):
         pub.sendMessage("sensor-messages.sdr_data", arg1 = sdr_data)
     
-    def get_reading(self, radio, fc_list):
+    def get_reading(self, fc_list):
         '''
         This function tests features that I add to the rxSDR class
         '''
@@ -167,11 +167,11 @@ class rxSDR(threading.Thread):
 
     
     def run(self):
-        radio = rxSDR()
+        # radio = rxSDR()
         fc_list = np.linspace(fcLow, fcHigh, ((fcHigh - fcLow)/(SCAN_RES*fs) + 1))
         
         while True:
-            data = self.get_reading(radio, fc_list)  # get the frequency data
+            data = self.get_reading(fc_list)  # get the frequency data
             if data is not None:                     # if successful
                 self._callback(data)                 # send the data to be logged
             time.sleep(self._delay)
