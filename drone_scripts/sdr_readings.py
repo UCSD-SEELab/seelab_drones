@@ -127,3 +127,10 @@ class rxSDR(threading.Thread):
     
     def _callback(self, sdr_data):
         pub.sendMessage("sensor-messages.sdr_data", arg1 = sdr_data)
+    
+    def run(self):
+        while True:
+            data = self.get_reading()
+            if data is not None:
+                self._callback(data)
+            time.sleep(self._delay)
