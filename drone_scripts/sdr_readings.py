@@ -55,7 +55,9 @@ class rxSDR(threading.Thread):
         self._delay = 5
         self.daemon = True
         # Configure SDR parameters
-        # self.sdr = rtl.RtlSdr()
+        print "pre init"
+        self.sdr = rtl.RtlSdr()
+        print "post init"
         # sleep(1)
         self.setGain(gain)
         self.setFc(fc, "mhz")
