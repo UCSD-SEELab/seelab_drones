@@ -38,6 +38,7 @@ np.set_printoptions(precision=4)
 
 fcLow = 30
 fcHigh = 50
+fc = 30
 fs = 2.5
 bw = 300
 gain = 'auto'
@@ -49,7 +50,7 @@ SCAN_RES = 1
 
 class rxSDR(threading.Thread):
 
-    def __init__(self, fc, fs, bw, gain):
+    def __init__(self):
         super(rxSDR, self).__init__()
         self._delay = 5
         self.daemon = True
@@ -164,7 +165,7 @@ class rxSDR(threading.Thread):
 
     
     def run(self):
-        radio = rxSDR(30, fc, bw, gain)
+        radio = rxSDR()
         fc_list = np.linspace(fcLow, fcHigh, ((fcHigh - fcLow)/(SCAN_RES*fs) + 1))
         
         while True:
