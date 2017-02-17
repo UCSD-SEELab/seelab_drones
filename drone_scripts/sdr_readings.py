@@ -174,7 +174,6 @@ class rxSDR(threading.Thread):
         
         while True:
             data = self.get_reading(fc_list)  # get the frequency data
-            print(data)
             if data is not None:                     # if successful
                 self._callback(data)                 # send the data to be logged
             time.sleep(self._delay)
