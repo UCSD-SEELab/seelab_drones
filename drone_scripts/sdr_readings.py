@@ -140,7 +140,7 @@ class rxSDR(threading.Thread):
         return freqs
     
     def _callback(self, sdr_data):
-        pub.sendMessage("sensor-messages.sdr_data", arg1 = sdr_data)
+        pub.sendMessage("sensor-messages.sdr-data", arg1=sdr_data)
     
     def get_reading(self, fc_list):
         '''
