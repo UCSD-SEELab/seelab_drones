@@ -67,7 +67,7 @@ class MyMixin(object):
 
 
 class Sensor(MyMixin, Base):
-    """Table for all the physical air/RF/GPS sensors that there are."""
+    """Table for all the physical air/RF/GPS/SDR sensors that there are."""
     sensor_type_id = Column(Integer, ForeignKey('sensor_types.id'))
     name = Column(String(50))
     sensor_type = relationship("SensorType", back_populates="extant_sensors")
@@ -263,6 +263,16 @@ class RFSensorRead(SensorRead):
     id = Column(Integer, ForeignKey('sensor_reads.id'), primary_key=True)
     #remember that these should be global to avoid confusion
     RF_data = Column(JSON)
+
+class SDRSensorRead(SensorRead):
+    """Sub-table for SDR sensor reads."""
+    __tablename__ = 'SDR_sensor_reads'
+    #__tablename__ = snake_case(cls.__name__)
+    __mapper_args__ = {'polymorphic_identity': 'SDR_sensor'}
+
+    id = Column(Integer, ForeignKey('sensor_reads.id'), primary_key=True)
+    #remember that these should be global to avoid confusion
+    SDR_data = Column(JSON)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
