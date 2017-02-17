@@ -327,7 +327,7 @@ class LoggerDaemon(threading.Thread):
     ### Won't work until database is configured properly
     def sdr_data_cb(self, arg1=None):
         """Add incoming SDR data to the database."""
-        print "sdr callback entered: {}".format(arg1)
+        #print "sdr callback entered: {}".format(arg1)
         current_time = self.mission_time()
         if current_time is not None:
             print 'entered sdr_data_cb'
