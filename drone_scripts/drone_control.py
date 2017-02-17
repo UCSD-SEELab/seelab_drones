@@ -31,6 +31,7 @@ import tempfile
 import socket
 import Queue
 import cPickle
+import numpy
 import time
 import sys
 import hardware
@@ -305,6 +306,7 @@ class LoggerDaemon(threading.Thread):
         if current_time is not None:
             print 'entered wifi_data_cb'
             data = copy.deepcopy(arg1)
+            print(type(data))
             with self.scoped_session() as session:
                 merged_sensor = session.merge(self.RF_sensor)
                 RF_event = session.query(
@@ -331,7 +333,8 @@ class LoggerDaemon(threading.Thread):
         current_time = self.mission_time()
         if current_time is not None:
             print 'entered sdr_data_cb'
-            data = copy.deepcopy(arg1)
+            data = copy.deepcopy(arg1.tolist())
+            print(type(data))
             with self.scoped_session() as session:
                 merged_sensor = session.merge(self.SDR_sensor)
                 SDR_event = session.query(
@@ -339,17 +342,17 @@ class LoggerDaemon(threading.Thread):
                 ).filter(
                     EventType.event_type == 'SDR_sensor_data',
                 ).one()
-            assoc_event = Event(
-                    event_type = SDR_event,
-                    event_data = {},
-            )
-            reading = RFSensorRead(
-                    RF_data=data,
-                    mission_drone_sensor=merged_sensor,
-                    event=assoc_event,
-                    time=current_time,
-            )
-            session.add_all([reading, assoc_event])
+                assoc_event = Event(
+                        event_type = SDR_event,
+                        event_data = {},
+                )
+                reading = SDRSensorRead(
+                        SDR_data=data,
+                        mission_drone_sensor=merged_sensor,
+                        event=assoc_event,
+                        time=current_time,
+                )
+                session.add_all([reading, assoc_event])
 
     def air_data_cb(self, arg1=None):
         """Add incoming air sensor data to the database."""
