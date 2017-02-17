@@ -165,7 +165,7 @@ class rxSDR(threading.Thread):
                 with open(FILENAME, 'a') as f:
                     f.write(','.join(map(str, np.round(freqs, NUM_DECIMAL))) + '\n')
             if DATABASE:
-                params = ['fl',fcLow,'fh',fcHigh,'fs',fs,'mhz','gain',gain,'nfft',NFFT,'scan',SCAN_RES]
+                params = ['freq',x,'fs',fs,'mhz','gain',gain,'nfft',NFFT]
                 freqs = freqs.tolist()
                 freqs.insert(0, params)
         return freqs
