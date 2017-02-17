@@ -330,7 +330,7 @@ class LoggerDaemon(threading.Thread):
         print "sdr callback entered: {}".format(arg1)
         current_time = self.mission_time()
         if current_time is not None:
-            print 'entered wifi_data_cb'
+            print 'entered sdr_data_cb'
             data = copy.deepcopy(arg1)
             with self.scoped_session as session:
                 merged_sensor = session.merge(self.SDR_sensor)
