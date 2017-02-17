@@ -333,7 +333,7 @@ class LoggerDaemon(threading.Thread):
         current_time = self.mission_time()
         if current_time is not None:
             print 'entered sdr_data_cb'
-            data = copy.deepcopy(arg1.tolist())
+            data = copy.deepcopy(arg1)
             print(type(data))
             with self.scoped_session() as session:
                 merged_sensor = session.merge(self.SDR_sensor)
