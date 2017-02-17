@@ -8,7 +8,8 @@
     "sensor_types": [
         "air",
         "GPS",
-        "RF"
+        "RF",
+        "SDR"
     ],
     "sensors": [
         {
@@ -22,6 +23,10 @@
         {
             "name": "RF1",
             "type": "RF"
+        },
+        {
+            "name": "SDR1",
+            "type": "SDR"
         }
     ],
     "events":[
@@ -33,6 +38,9 @@
         },
         {
             "type": "RF_sensor_data"
+        },
+        {
+            "type": "SDR_sensor_data"
         },
         {
             "type": "mission_event"
