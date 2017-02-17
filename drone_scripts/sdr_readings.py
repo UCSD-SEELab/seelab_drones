@@ -164,11 +164,10 @@ class rxSDR(threading.Thread):
             if SAVE:
                 with open(FILENAME, 'a') as f:
                     f.write(','.join(map(str, np.round(freqs, NUM_DECIMAL))) + '\n')
-        print("Scan required " + str(time.time() - now) + " seconds")
+        # print("Scan required " + str(time.time() - now) + " seconds")
 
     
     def run(self):
-        # radio = rxSDR()
         fc_list = np.linspace(fcLow, fcHigh, ((fcHigh - fcLow)/(SCAN_RES*fs) + 1))
         
         while True:
