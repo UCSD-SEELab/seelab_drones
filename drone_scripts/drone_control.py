@@ -346,7 +346,7 @@ class LoggerDaemon(threading.Thread):
             reading = RFSensorRead(
                     RF_data=data,
                     mission_drone_sensor=merged_sensor,
-                    event=accoc_event,
+                    event=assoc_event,
                     time=current_time,
             )
             session.add_all([reading, assoc_event])
