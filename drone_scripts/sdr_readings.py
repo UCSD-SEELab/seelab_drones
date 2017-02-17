@@ -32,6 +32,10 @@ import time
 import threading
 from pubsub import pub
 
+SAVE = False
+DATABASE = True
+FILENAME = "fullRange_2_5mhz.txt"
+
 mhz = 1000000.0
 khz = 1000.0
 RX_MIN_FREQ = 22 * mhz
@@ -44,8 +48,6 @@ fs = 2.5
 bw = 300
 gain = 'auto'
 NFFT = 1024
-SAVE = False
-FILENAME = "fullRange_2_5mhz.txt"
 NUM_DECIMAL = 3
 SCAN_RES = 1
 
@@ -162,6 +164,10 @@ class rxSDR(threading.Thread):
             if SAVE:
                 with open(FILENAME, 'a') as f:
                     f.write(','.join(map(str, np.round(freqs, NUM_DECIMAL))) + '\n')
+            if DATABASE:
+                params = ['fl',fcLow,'fh',fcHigh,'fs',fs,'mhz','gain',gain,'nfft',NFFT,'scan',SCAN_RES]
+                freqs = freqs.tolist()
+                freqs.insert(0, params)
         return freqs
         # print("Scan required " + str(time.time() - now) + " seconds")
 
