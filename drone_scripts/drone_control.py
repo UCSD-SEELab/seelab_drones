@@ -232,6 +232,7 @@ class LoggerDaemon(threading.Thread):
         """Set up the subscribers and callbacks for relevant pubsub topics."""
         pub.subscribe(self.air_data_cb, "sensor-messages.air-data")
         pub.subscribe(self.wifi_data_cb, "sensor-messages.wifi-data")
+        pub.subscribe(self.sdr_data_cb, "sensor-messages.sdr-data")
         pub.subscribe(self.mission_data_cb, "nav-messages.mission-data")
         pub.subscribe(self.launch_cb, "flask-messages.launch")
 
@@ -277,6 +278,8 @@ class LoggerDaemon(threading.Thread):
                     self.GPS_sensor = mds
                 elif 'RF' in mds.sensor.name:
                     self.RF_sensor = mds
+                elif 'SDR' in mds.sensor.name:
+                    self.SDR_sensor = mds
 
     def mission_data_cb(self, arg1=None):
         """Add incoming mission event to the database."""
@@ -320,6 +323,32 @@ class LoggerDaemon(threading.Thread):
                         time=current_time,
                 )
                 session.add_all([reading, assoc_event])
+    
+    def sdr_data_cb(self, arg1=None):
+        """Add incoming SDR data to the database."""
+        print "sdr callback entered: {}".format(arg1)
+        current_time = self.mission_time()
+        if current_time is not None:
+            print 'entered wifi_data_cb'
+            data = copy.deepcopy(arg1)
+            with self.scoped_session as session:
+                merged_sensor = session.merge(self.SDR_sensor)
+                SDR_event = session.query(
+                    EventType,
+                ).filter(
+                    EventType.event_type == 'SDR_sensor_data',
+                ).one()
+            assoc_event = Event(
+                    event_type = SDR_event,
+                    event_data = {},
+            )
+            reading = RFSensorRead(
+                    RF_data=data,
+                    mission_drone_sensor=merged_sensor,
+                    event=accoc_event,
+                    time=current_time,
+            )
+            session.add_all([reading, assoc_event])
 
     def air_data_cb(self, arg1=None):
         """Add incoming air sensor data to the database."""
