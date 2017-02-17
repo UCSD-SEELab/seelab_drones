@@ -324,6 +324,7 @@ class LoggerDaemon(threading.Thread):
                 )
                 session.add_all([reading, assoc_event])
     
+    ### Won't work until database is configured properly
     def sdr_data_cb(self, arg1=None):
         """Add incoming SDR data to the database."""
         print "sdr callback entered: {}".format(arg1)
