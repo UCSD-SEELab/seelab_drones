@@ -124,7 +124,7 @@ class rxSDR(threading.Thread):
         if ((unit != "hz") and (unit != "khz")): unit = "mhz"
         print("Fs=" + str(self.getFs(unit)) + " " + unit)
 
-# inspired by Adafruit's model.py get_data function
+    # inspired by Adafruit's model.py get_data function
     def getFrequencies(self, nfft):
         # Get width number of raw samples so the number of frequency bins is
 		# the same as the display width.  Add two because there will be mean/DC
@@ -164,6 +164,7 @@ class rxSDR(threading.Thread):
             if SAVE:
                 with open(FILENAME, 'a') as f:
                     f.write(','.join(map(str, np.round(freqs, NUM_DECIMAL))) + '\n')
+        return freqs
         # print("Scan required " + str(time.time() - now) + " seconds")
 
     
@@ -172,6 +173,7 @@ class rxSDR(threading.Thread):
         
         while True:
             data = self.get_reading(fc_list)  # get the frequency data
+            print(data)
             if data is not None:                     # if successful
                 self._callback(data)                 # send the data to be logged
             time.sleep(self._delay)
