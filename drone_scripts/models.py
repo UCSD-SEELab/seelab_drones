@@ -273,6 +273,7 @@ class SDRSensorRead(SensorRead):
     id = Column(Integer, ForeignKey('sensor_reads.id'), primary_key=True)
     #remember that these should be global to avoid confusion
     SDR_data = Column(JSON)
+    velocity = Column(JSON)           # This might work
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
