@@ -21,7 +21,7 @@ import dronekit
 from dronekit import VehicleMode
 import copy
 from code import interact
-import dronekit_sitl
+import dronekit_sitlBi
 from nav_utils import relative_to_global, get_ground_distance 
 import nav_utils
 import threading
