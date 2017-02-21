@@ -349,6 +349,7 @@ class LoggerDaemon(threading.Thread):
                         mission_drone_sensor=merged_sensor,
                         event=assoc_event,
                         time=current_time,
+                        velocity=Pilot.get_velocity()
                 )
                 session.add_all([reading, assoc_event])
 
