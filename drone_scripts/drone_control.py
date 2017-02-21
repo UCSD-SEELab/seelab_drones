@@ -21,7 +21,7 @@ import dronekit
 from dronekit import VehicleMode
 import copy
 from code import interact
-import dronekit_sitlBi
+import dronekit_sitl
 from nav_utils import relative_to_global, get_ground_distance 
 import nav_utils
 import threading
@@ -330,6 +330,7 @@ class LoggerDaemon(threading.Thread):
         """Add incoming SDR data to the database."""
         #print "sdr callback entered: {}".format(arg1)
         current_time = self.mission_time()
+        current_velocity=self._pilot.get_velocity()
         if current_time is not None:
             print 'entered sdr_data_cb'
             data = copy.deepcopy(arg1)
@@ -349,7 +350,7 @@ class LoggerDaemon(threading.Thread):
                         mission_drone_sensor=merged_sensor,
                         event=assoc_event,
                         time=current_time,
-                        velocity=Pilot.get_velocity()
+                        velocity=current_velocity
                 )
                 session.add_all([reading, assoc_event])
 
@@ -620,7 +621,7 @@ class Pilot(object):
         return None
 
     def get_attitude(self):
-        """Return the current altitude."""
+        """Return the current attitude."""
         if self.vehicle is not None:
             return self.vehicle.attitude
 
