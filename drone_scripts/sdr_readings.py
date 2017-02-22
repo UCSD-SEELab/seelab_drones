@@ -41,8 +41,8 @@ khz = 1000.0
 RX_MIN_FREQ = 22 * mhz
 np.set_printoptions(precision=4)
 
-fcLow = 30
-fcHigh = 50
+fcLow = 100
+fcHigh = 300
 fc = 30
 fs = 2.5
 bw = 300
@@ -157,7 +157,10 @@ class rxSDR(threading.Thread):
             with open(FILENAME, 'a') as file:
                 file.write('fl,%f,fh,%f,fs,%f,mhz,gain,%s,nfft,%d,scan,%f'%(fcLow,fcHigh,fs,gain,NFFT,SCAN_RES)+'\n')
         now = time.time()
+        i = 0
+        data = []
         for x in fc_list:
+            data.append([])
             self.setFc(x, "mhz")
             if ((time.time() - now) < 0.025): time.sleep(0.025 - (time.time()-now)) # allow PLL to settle
             freqs = self.getFrequencies(NFFT)
@@ -168,13 +171,14 @@ class rxSDR(threading.Thread):
                 params = ['freq',x,'fs',fs,'mhz','gain',gain,'nfft',NFFT]
                 freqs = freqs.tolist()
                 freqs.insert(0, params)
-        return freqs
+            data[i].append(freqs)
+            i = i + 1
+        return data
         # print("Scan required " + str(time.time() - now) + " seconds")
 
     
     def run(self):
         fc_list = np.linspace(fcLow, fcHigh, ((fcHigh - fcLow)/(SCAN_RES*fs) + 1))
-        
         while True:
             data = self.get_reading(fc_list)  # get the frequency data
             if data is not None:                     # if successful
