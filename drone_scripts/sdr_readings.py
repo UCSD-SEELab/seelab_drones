@@ -42,7 +42,7 @@ RX_MIN_FREQ = 22 * mhz
 np.set_printoptions(precision=4)
 
 fcLow = 100
-fcHigh = 300
+fcHigh = 200
 fc = 30
 fs = 2.5
 bw = 300
@@ -55,7 +55,7 @@ class rxSDR(threading.Thread):
 
     def __init__(self):
         super(rxSDR, self).__init__()
-        self._delay = 5
+        self._delay = 10
         self.daemon = True
         # Configure SDR parameters
         self.sdr = rtl.RtlSdr()
