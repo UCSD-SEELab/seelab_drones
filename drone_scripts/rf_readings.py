@@ -208,7 +208,7 @@ class RSSISensor(threading.Thread):
         wifi_dict = {
             'SSID': SSID,
             'Quality': Quality,
-            'Signal': Signal,
+            'Signal': Sig,
             'Noise': Noise,
             'BitRate': BitRate,
         }
