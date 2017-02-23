@@ -212,7 +212,7 @@ class RSSISensor(threading.Thread):
             'Noise': Noise,
             'BitRate': BitRate,
         }
-        print wifi_dict
+        # print wifi_dict
         return wifi_dict
 
     def generate_fake_reading(self):
