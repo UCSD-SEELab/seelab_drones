@@ -150,8 +150,8 @@ class rxSDR(threading.Thread):
         # Get width number of raw samples so the number of frequency bins is
 		# the same as the display width.  Add two because there will be mean/DC
 		# values in the results which are ignored.
-        filename = '/usr/share/adafruit/webide/repositories/bladerf/BladeRX/trial.csv'
-        samples = self.sdr.rx_samples(str(nfft), 'csv', filename)
+        filename = '/usr/share/adafruit/webide/repositories/seelab_drones/database_files/trial.csv'
+        samples = self.sdr.rx_samples('1K', 'csv', filename)
         print(samples)
         print(type(samples))
         hw_time = np.hamming(nfft)
