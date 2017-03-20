@@ -110,7 +110,7 @@ class rxSDR(threading.Thread):
             print("Error. Fc too low. Setting to " + str(RX_MIN_FREQ))
             Fc = RX_MIN_FREQ / mhz
         ### should be good
-        self.sdr.set_center_freq(Fc)
+        self.sdr.set_center_freq('all', Fc)
 
     '''
     Probs don't need this
