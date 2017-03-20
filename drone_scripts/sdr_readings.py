@@ -192,14 +192,12 @@ class rxSDR(threading.Thread):
             
             data[i].append(freqs)
             i = i + 1
-            print(freqs[1:NFFT])
-            print(len(freqs[1:NFFT]))
-            fft_avg = sum(freqs[1:NFFT]) / float(len(freqs[1:NFFT]))
+            fft_avg = sum(freqs[1:NFFT+1]) / float(len(freqs[1:NFFT+1]))
             if fft_avg < best_channel[0]:
                 best_channel[0] = fft_avg
                 best_channel[1] = x
-                print('Should change to ' + str(x) + 'MHz')
-        
+
+        print('Should change to ' + str(best_channel[1]) + 'MHz')
         print("Scan required " + str(time.time() - now) + " seconds")
         return data
 
