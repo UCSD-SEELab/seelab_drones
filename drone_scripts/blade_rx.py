@@ -101,7 +101,7 @@ class blade_rf_sdr():
             return False
     
     
-    def load_fpga(self, external = True, filepath = None):
+    def load_fpga(self, external = False, filepath = None):
         '''This function loads the FPGA image. Always run at bladeRF boot unless
         you have configured it to autoload on powerup'''
         
@@ -138,7 +138,17 @@ class blade_rf_sdr():
             sample_cmd = ('set bandwidth tx ' + str(sample_freq) + 'M')
             self.send_exec(sample_cmd)
     
-    
+    def set_center_freq(self, mode, center_freq):
+        '''Pass in center freq in MHz'''
+        if mode == 'rx' or mode == 'all':
+            freq_cmd = ('set frequency rx ' + str(center_freq) + 'M')
+            print("Setting rx center frequency to " + str(center_freq))
+            self.send_exec(freq_cmd)
+        if mode == 'tx' or mode == 'all':
+            freq_cmd = ('set frequency tx ' + str(center_freq) + 'M')
+            print("Setting tx center frequency to " + str(center_freq))
+            self.send_exec(freq_cmd)
+	
     def set_amplifier_gain(self, amplifier, gain):
         '''This function sets the gain of the Rx and Tx amplifiers on the
         bladeRF. It can take multiple arguments as a list, but the number of
@@ -176,7 +186,7 @@ class blade_rf_sdr():
     
     
     def run(self, sdr):
-        sdr.open_blade('1')
+        # sdr.open_blade('1')
         # sdr.set_sample_rate(6)
         self.set_amplifier_gain(['lnagain', 'rxvga1', 'rxvga2'], [0, 5, 0])
         filename = '/usr/share/adafruit/webide/repositories/bladerf/BladeRX/trial.csv'
@@ -184,4 +194,5 @@ class blade_rf_sdr():
 
 if __name__ == '__main__':
     sdr = blade_rf_sdr(1)
+    sdr.set_center_freq('all', 446.5)
     sdr.run(sdr)
