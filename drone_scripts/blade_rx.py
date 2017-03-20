@@ -101,7 +101,7 @@ class blade_rf_sdr():
             return False
     
     
-    def load_fpga(self, external = False, filepath = None):
+    def load_fpga(self, external = True, filepath = None):
         '''This function loads the FPGA image. Always run at bladeRF boot unless
         you have configured it to autoload on powerup'''
         
