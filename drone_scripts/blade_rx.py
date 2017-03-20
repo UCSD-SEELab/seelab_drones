@@ -174,7 +174,7 @@ class blade_rf_sdr():
     
     def rx_samples(self, n, file_format, filepath):
         rx_cfg_exec = ('rx config file='+filepath + ' format='+file_format + 
-        ' n=' + n)
+        ' n=' + str(n))
         self.send_exec(rx_cfg_exec)
         rx_start_exec = 'rx start'
         self.send_exec(rx_start_exec)
