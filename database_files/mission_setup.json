@@ -4,7 +4,7 @@
     "drones": [
         {
             "name": "Alpha",
-            "sensors": ["air1", "GPS1", "RF1", "SDR1"]
+            "sensors": [GPS1", "RF1", "SDR1"]
         }
     ]
 }
