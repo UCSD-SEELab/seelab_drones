@@ -129,7 +129,8 @@ class rxSDR(threading.Thread):
         '''This should be good to go. Sloppy for now'''
         # if (unit == "khz"): self.sdr.set_sample_rate(Fs * khz)
         # elif (unit == "mhz"): self.sdr.set_sample_rate(Fs * mhz)
-        else: self.sdr.set_sample_rate(Fs)
+        # else: self.sdr.set_sample_rate(Fs)
+        self.sdr.set_sample_rate(Fs)
 
     '''
     Probs don't need this:
