@@ -28,7 +28,11 @@ class DataReceiver():
         )
         with open('sensor_data_log.txt', 'w') as wipe:
             pass
-        self.connection.write('{"msg":"cmd","usb":1}')
+        # self.connection.write('{"msg":"cmd","usb":1}')
+        self.connection.write('{"usb_en":true}')
+        print("DEBUG: Air sensor usb enable command sent")
+        time.sleep(0.01)
+        self.connection.write('{"co2_en":true}')
         print self.connection.isOpen()
 
     def read_data_stream(self):

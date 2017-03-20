@@ -43,10 +43,12 @@ class AirSensor(threading.Thread):
         self._connection = None
         if not self._simulated:
             self.connect_to_sensor()
+            print("connected to air")
         self.start()
 
     def connect_to_sensor(self):
-        """Connect to an air sensor and prepare it for reading data."""
+        """Connect to an air sensor and prepare it for reading data. Should add
+        ability to take exception if unable to connect and print error msg"""
         try:
             self._connection = serial.Serial(
                     self._serial_port,
@@ -54,7 +56,9 @@ class AirSensor(threading.Thread):
                     timeout= self._timeout
             )
             # Ask Michael about why this is necessary
-            self._connection.write('{"msg":"cmd","usb":1}')
+            self._connection.write('{"usb_en":true}')
+            # time.sleep(0.01)
+            self._connection.write('{"co2_en":true}')
         except serial.serialutil.SerialException as e:
             sys.stderr.write("Could not open serial for RealAirSensor\n")
             sys.stderr.write(e.__repr__())
@@ -67,12 +71,15 @@ class AirSensor(threading.Thread):
         """Gather and publish data periodically while the thread is alive."""
         if not self._simulated:
             if self._connection is None:
+                print("DEBUG: no air conn.")
                 return
             while(True):
                 data = self.get_reading()
                 if data is not None:
                     #print "Got air sensor reading: {}".format(data)
                     self._callback(data)
+                else:
+                    print("DEBUG: no air data")
         else:
             while(True):
                 data = self.generate_fake_reading()
@@ -88,7 +95,7 @@ class AirSensor(threading.Thread):
                 try:
                     readings = json.loads(latest_raw)
                 except Exception as e:
-                    #print "JSON error"
+                    print "JSON error"
                     return None
 		return readings
 
