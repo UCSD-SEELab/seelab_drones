@@ -158,8 +158,7 @@ class rxSDR(threading.Thread):
     def _callback(self, sdr_data):
         '''Send SDR scan data to subscribers'''
         pub.sendMessage("sensor-messages.sdr-data", arg1=sdr_data)
-    
-    def get_average(data)
+
     
     def get_reading(self, fc_list):
         '''
