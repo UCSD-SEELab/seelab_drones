@@ -57,38 +57,12 @@ class rxSDR(threading.Thread):
         
         self.start()
 
-    '''
-    Probs dont need this
-    def setBwKhz(self, bw_khz):     # does not work for some reason?
-        self.sdr.set_bandwidth(bw_khz*khz)
-    '''
 
     def setGainDefaults(self): # input gain in dB, "auto" by default
         gain_list = ['lnagain', 'rxvga1', 'rxvga2', 'txvga1', 'txvga2']
         gain_vals = [lnagain, rxvga1, rxvga2, txvga1, txvga2]
         self.sdr.set_amplifier_gain(gain_list, gain_vals)
 
-    '''
-    Probs dont need this
-    def getGain(self):                   # get tuner gain in dB
-        return self.sdr.get_gain()
-
-    def getGains(self, unit = ".1dB"):  # default to output in 0.1dB
-        gains = self.sdr.get_gains()
-        if (unit == "dB"):
-            gainsdB = [i / 10.0 for i in gains]
-            return gainsdB
-        else: return gains
-
-    def printGain(self):
-        print("gain=" + str(self.getGain()) + " dB")
-
-    def printGains(self, unit = ".1dB"):   # print out gains. defaults to 0.1dB
-        gains = self.getGains(unit)
-        if (unit == "dB"):
-            print("gains (dB):" + "\n" + str(gains))
-        else: print("gains (0.1dB): " + "\n" + str(gains))
-    '''
 
     def setFc(self, Fc, unit = "mhz", mode='rx'):
         '''Auto converted to MHz later so pass in MHz now. This is messy I'll
@@ -104,18 +78,6 @@ class rxSDR(threading.Thread):
 
         self.sdr.set_center_freq(mode, Fc)
 
-    '''
-    Probs don't need this
-    def getFc(self, unit = "mhz"):      # get center frequency. defaults to mhz
-        freq_hz = self.sdr.get_center_freq()
-        if (unit == "hz"):      return freq_hz
-        elif (unit == "khz"):   return freq_hz / khz
-        else:                   return freq_hz / mhz
-
-    def printFc(self, unit = "mhz"):
-        if ((unit != "khz") and (unit != "hz")): unit = "mhz"
-        print("Fc=" + str(self.getFc(unit)) + " " + unit)
-    '''
 
     def setFs(self, Fs, unit = "hz"):     # default to Hz
         '''This should be good to go. Sloppy for now'''
@@ -124,18 +86,6 @@ class rxSDR(threading.Thread):
         # else: self.sdr.set_sample_rate(Fs)
         self.sdr.set_sample_rate(Fs)
 
-    '''
-    Probs don't need this:
-    def getFs(self, unit):          # get sample rate. defaults to mhz
-        freq_hz = self.sdr.get_sample_rate()
-        if (unit == "hz"): return freq_hz
-        elif (unit == "khz"): return freq_hz / khz
-        else: return freq_hz / mhz
-
-    def printFs(self, unit):
-        if ((unit != "hz") and (unit != "khz")): unit = "mhz"
-        print("Fs=" + str(self.getFs(unit)) + " " + unit)
-    '''
 
     def getFrequencies(self, nfft):
         '''This should be properly updated. Report back after test'''
@@ -201,17 +151,26 @@ class rxSDR(threading.Thread):
                 best_channel[0] = fft_avg
                 best_channel[1] = x
 
-        print('Should change to ' + str(best_channel[1]) + 'MHz')
+        # print('Should change to ' + str(best_channel[1]) + 'MHz')
         print("Scan required " + str(time.time() - now) + " seconds")
         
         return data, best_channel[1]
 
+    def send_channel_change(self, new_channel):
+        '''This will use the GNU Radio script to send out the approriate data
+        to tell the other drone(s) to switch to whichever frequency was
+        determined to be the best'''
+        print("Sending message to switch to " + str(new_channel) + "MHz")
     
     def run(self):
         # fc_list = np.linspace(fcLow, fcHigh, ((fcHigh - fcLow)/(SCAN_RES*fs) + 1))
         fc_list = [f1, f2, f3]
         while True:
-            data = self.get_reading(fc_list)  # get the frequency data
+            data, next_channel = self.get_reading(fc_list)
+            
             if data is not None:                     # if successful
                 self._callback(data)                 # send the data to be logged
+            
+            
+            
             time.sleep(self._delay)
