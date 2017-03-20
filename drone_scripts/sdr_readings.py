@@ -126,9 +126,9 @@ class rxSDR(threading.Thread):
     '''
 
     def setFs(self, Fs, unit = "hz"):     # default to Hz
-        '''This should be good to go'''
-        if (unit == "khz"): self.sdr.set_sample_rate(Fs * khz)
-        elif (unit == "mhz"): self.sdr.set_sample_rate(Fs * mhz)
+        '''This should be good to go. Sloppy for now'''
+        # if (unit == "khz"): self.sdr.set_sample_rate(Fs * khz)
+        # elif (unit == "mhz"): self.sdr.set_sample_rate(Fs * mhz)
         else: self.sdr.set_sample_rate(Fs)
 
     '''
