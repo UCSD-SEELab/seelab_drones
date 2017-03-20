@@ -162,7 +162,11 @@ class rxSDR(threading.Thread):
     
     def get_reading(self, fc_list):
         '''
-        This function tests features that I add to the rxSDR class
+        This function scans the spectrum given and returns the data
+        Returns:
+        
+        data - [[metadata], nfft data points]; list of fft data from scan
+        best_channel[1] - frequency (in MHz) to switch to
         '''
 
         if SAVE:
@@ -199,7 +203,8 @@ class rxSDR(threading.Thread):
 
         print('Should change to ' + str(best_channel[1]) + 'MHz')
         print("Scan required " + str(time.time() - now) + " seconds")
-        return data
+        
+        return data, best_channel[1]
 
     
     def run(self):
