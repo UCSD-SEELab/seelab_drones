@@ -192,7 +192,9 @@ class rxSDR(threading.Thread):
             
             data[i].append(freqs)
             i = i + 1
-            fft_avg = sum(freqs) / float(len(freqs))
+            print(freqs[1:nfft])
+            print(len(freqs[1:nfft]))
+            fft_avg = sum(freqs[1:nfft]) / float(len(freqs[1:nfft]))
             if fft_avg < best_channel[0]:
                 best_channel[0] = fft_avg
                 best_channel[1] = x
