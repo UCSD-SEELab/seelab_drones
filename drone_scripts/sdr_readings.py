@@ -50,13 +50,13 @@ class rxSDR(threading.Thread):
         self._delay = 10
         self.daemon = True
         # Configure SDR parameters
-#TODO: fix this
-'''
+        #TODO: fix this
+        '''
         self.sdr = rtl.RtlSdr()
         self.setGainDefaults()
         self.setFc(fc, "mhz")
         self.setFs(fs, "mhz")
-'''
+        '''
         self.sdr = blade.blade_rf_sdr(1)         # init bladeRF, load FPGA
         self.setGainDefaults()
         self.setFc(fc, 'mhz')
@@ -64,11 +64,11 @@ class rxSDR(threading.Thread):
         
         self.start()
 
-'''
-Probs dont need this
+    '''
+    Probs dont need this
     def setBwKhz(self, bw_khz):     # does not work for some reason?
         self.sdr.set_bandwidth(bw_khz*khz)
-'''
+    '''
 
     def setGainDefaults(self): # input gain in dB, "auto" by default
         gain_list = ['lnagain', 'rxvga1', 'rxvga2', 'txvga1', 'txvga2']
@@ -76,8 +76,8 @@ Probs dont need this
         #NOTE: The format may be wrong
         self.sdr.set__amplifier_gain(gain_list, gain_vals)
 
-'''
-Probs dont need this
+    '''
+    Probs dont need this
     def getGain(self):                   # get tuner gain in dB
         return self.sdr.get_gain()
 
@@ -96,7 +96,7 @@ Probs dont need this
         if (unit == "dB"):
             print("gains (dB):" + "\n" + str(gains))
         else: print("gains (0.1dB): " + "\n" + str(gains))
-'''
+    '''
 
     def setFc(self, Fc, unit = "mhz"):
         '''Auto converted to MHz later so pass in MHz now. This is messy I'll
@@ -112,8 +112,8 @@ Probs dont need this
         ### should be good
         self.sdr.set_center_freq(Fc)
 
-'''
-Probs don't need this
+    '''
+    Probs don't need this
     def getFc(self, unit = "mhz"):      # get center frequency. defaults to mhz
         freq_hz = self.sdr.get_center_freq()
         if (unit == "hz"):      return freq_hz
@@ -123,16 +123,16 @@ Probs don't need this
     def printFc(self, unit = "mhz"):
         if ((unit != "khz") and (unit != "hz")): unit = "mhz"
         print("Fc=" + str(self.getFc(unit)) + " " + unit)
-'''
+    '''
 
     def setFs(self, Fs, unit = "hz"):     # default to Hz
-    '''This should be good to go'''
+        '''This should be good to go'''
         if (unit == "khz"): self.sdr.set_sample_rate(Fs * khz)
         elif (unit == "mhz"): self.sdr.set_sample_rate(Fs * mhz)
         else: self.sdr.set_sample_rate(Fs)
 
-'''
-Probs don't need this:
+    '''
+    Probs don't need this:
     def getFs(self, unit):          # get sample rate. defaults to mhz
         freq_hz = self.sdr.get_sample_rate()
         if (unit == "hz"): return freq_hz
@@ -142,14 +142,14 @@ Probs don't need this:
     def printFs(self, unit):
         if ((unit != "hz") and (unit != "khz")): unit = "mhz"
         print("Fs=" + str(self.getFs(unit)) + " " + unit)
-'''
+    '''
 
     def getFrequencies(self, nfft):
         '''This should be properly updated. Report back after test'''
         # Get width number of raw samples so the number of frequency bins is
 		# the same as the display width.  Add two because there will be mean/DC
 		# values in the results which are ignored.
-		filename = '/usr/share/adafruit/webide/repositories/bladerf/BladeRX/trial.csv'
+        filename = '/usr/share/adafruit/webide/repositories/bladerf/BladeRX/trial.csv'
         samples = self.sdr.rx_samples(nfft, 'csv', filename)
         hw_time = np.hamming(nfft)
         # fft and take abs() to get frequency bin magnitudes
@@ -192,6 +192,7 @@ Probs don't need this:
             data[i].append(freqs)
             i = i + 1
         return data
+        print(data)
         print("Scan required " + str(time.time() - now) + " seconds")
 
     
