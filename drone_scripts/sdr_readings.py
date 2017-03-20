@@ -74,7 +74,7 @@ class rxSDR(threading.Thread):
         gain_list = ['lnagain', 'rxvga1', 'rxvga2', 'txvga1', 'txvga2']
         gain_vals = [lnagain, rxvga1, rxvga2, txvga1, txvga2]
         #NOTE: The format may be wrong
-        self.sdr.set__amplifier_gain(gain_list, gain_vals)
+        self.sdr.set_amplifier_gain(gain_list, gain_vals)
 
     '''
     Probs dont need this
