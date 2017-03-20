@@ -151,7 +151,9 @@ class rxSDR(threading.Thread):
 		# the same as the display width.  Add two because there will be mean/DC
 		# values in the results which are ignored.
         filename = '/usr/share/adafruit/webide/repositories/bladerf/BladeRX/trial.csv'
-        samples = self.sdr.rx_samples(nfft, 'csv', filename)
+        samples = self.sdr.rx_samples(str(nfft), 'csv', filename)
+        print(samples)
+        print(type(samples))
         hw_time = np.hamming(nfft)
         # fft and take abs() to get frequency bin magnitudes
         freqs = np.absolute(np.fft.fft(np.multiply(samples, hw_time)))
