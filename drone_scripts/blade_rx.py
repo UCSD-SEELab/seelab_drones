@@ -14,7 +14,7 @@ https://github.com/Nuand/bladeRF/wiki/Getting-Started%3A-Verifying-Basic-Device-
 
 interface = 'USB2' # make this automatic. Hi-Speed vs SuperSpeed
 machine =   'drone'
-default_fpga = 'hostedx40.rbf'
+default_fpga = '/usr/share/adafruit/webide/repositories/seelab_drones/drone_scripts/hostedx40.rbf'
 
 import os
 import subprocess
