@@ -173,6 +173,9 @@ class blade_rf_sdr():
     
     
     def rx_samples(self, n, file_format = None, filepath = None):
+        '''
+        For some reason this gives file not configured BS. Will try ghetto way
+        
         rx_cfg_exec = ('rx config file='+filepath + ' format='+file_format + 
         ' n=' + n)
         self.send_exec(rx_cfg_exec)
@@ -180,6 +183,14 @@ class blade_rf_sdr():
         self.send_exec(rx_start_exec)
         rx_wait_exec = 'rx wait'
         self.send_exec(rx_wait_exec)
+        self.is_idle('rx')
+        '''
+        rx_cfg_exec = ('rx1 config file='+filepath + ' format='+file_format + 
+        ' n=' + n)
+        self.send_command('-i')      # put in interactive mode
+        subprocess.check_output(rx_cfg_exec)
+        self.send_exec('rx start')
+        self.send_exec('rx wait')
         self.is_idle('rx')
     
     
