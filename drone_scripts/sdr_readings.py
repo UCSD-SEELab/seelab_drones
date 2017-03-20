@@ -173,8 +173,11 @@ class rxSDR(threading.Thread):
         for x in fc_list:
             data.append([])
             self.setFc(x, 'mhz', 'rx')
+            
             if ((time.time() - now) < 0.025): time.sleep(0.025 - (time.time()-now)) # allow PLL to settle
+            
             freqs = self.getFrequencies(NFFT)
+            
             if SAVE:
                 with open(FILENAME, 'a') as f:
                     f.write(','.join(map(str, np.round(freqs, NUM_DECIMAL))) + '\n')
@@ -182,8 +185,10 @@ class rxSDR(threading.Thread):
                 params = ['freq',x,'fs',fs,'mhz','nfft',NFFT]
                 freqs = freqs.tolist()
                 freqs.insert(0, params)
+            
             data[i].append(freqs)
             i = i + 1
+        
         print("Scan required " + str(time.time() - now) + " seconds")
         return data
 
