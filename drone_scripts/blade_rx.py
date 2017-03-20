@@ -181,8 +181,6 @@ class blade_rf_sdr():
         rx_wait_exec = 'rx wait'
         self.send_exec(rx_wait_exec)
         self.is_idle('rx')
-        time.sleep(3)
-        self.is_idle('rx')
     
     
     def run(self, sdr):
