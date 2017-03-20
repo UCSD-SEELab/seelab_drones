@@ -1,31 +1,16 @@
 '''
-Inspired by the work of Tony DiCola at adafruit and [whoever wrote rtlsdr()]
+For use with Nuand BladeRF. This script will scan the frequencies listed in fc
+list and perform basic statistics to estimate which channel has the lowest
+utilization. It will return the channel to use and the data it scanned.
 
-rxSDR is a class to interact with a XXXXX SDR receiver. I may add spectrum
-visualization down the road if I figure it out and feel it's necessary.
+We will be using 440 MHz, 925 MHz, and 1270 MHz to talk on since these are in
+HAM or ISM bands.
 
-Actually, real time visualization while flying sounds like a great idea!
-
-Using work from "-----"
-
-Using Adafruit's SDR Receiver USB stick - 
-   RTL2832 w/ R820T
-
-Highest safe sample rate is 2.56MS/s
-Uses about 300mA @ 5v
-Samples are unsigned 8-bit so (num - 127) = actual I/Q
-
-Can change frequency about 40 times/second. 300/sec if we dgaf about PLL lock
-
-Can tune 22 to 1870 MHz
-
-Super awesome resource:
-http://www.superkuh.com/rtlsdr.html
-
-This version of the file tries to use threading to integrate with drone
+NOTE: You must have a HAM radio license to do any transmitting!
 '''
 
-import rtlsdr as rtl
+# import rtlsdr as rtl
+import blade_rx as blade
 import numpy as np
 from time import sleep
 import time
@@ -34,23 +19,30 @@ from pubsub import pub
 
 SAVE = False
 DATABASE = True
-FILENAME = "fullRange_2_5mhz.txt"
+FILENAME = "blade_2_5mhz.txt"
 
 mhz = 1000000.0
 khz = 1000.0
-RX_MIN_FREQ = 22 * mhz
+RX_MIN_FREQ = 300 * mhz
 np.set_printoptions(precision=4)
 
 fcLow = 100
 fcHigh = 200
-fc = 30
-fs = 2.5
-bw = 300
-gain = 'auto'
+fs = 0.4                                     # 0.4 MHz, 400 kHz
+f1 = 440e6
+f2 = 925e6
+f3 = 1270e6
+fc = f1                                      # default frequency in MHz
+lnagain = 6
+rxvga1 = 30
+rxvga2 = 30
+txvga1 = -1
+txvga2 = 25
 NFFT = 1024
 NUM_DECIMAL = 3
 SCAN_RES = 1
 
+# rxSDR is an old name used for the rtl. Change it if you want future person
 class rxSDR(threading.Thread):
 
     def __init__(self):
@@ -58,19 +50,34 @@ class rxSDR(threading.Thread):
         self._delay = 10
         self.daemon = True
         # Configure SDR parameters
+#TODO: fix this
+'''
         self.sdr = rtl.RtlSdr()
-        self.setGain(gain)
+        self.setGainDefaults()
         self.setFc(fc, "mhz")
         self.setFs(fs, "mhz")
+'''
+        self.sdr = blade.blade_rf_sdr(1)         # init bladeRF, load FPGA
+        self.setGainDefaults()
+        self.setFc(fc, 'mhz')
+        self.setFs(fs, 'mhz')
         
         self.start()
 
+'''
+Probs dont need this
     def setBwKhz(self, bw_khz):     # does not work for some reason?
         self.sdr.set_bandwidth(bw_khz*khz)
+'''
 
-    def setGain(self, gain_dB = "auto"): # input gain in dB, "auto" by default
-        self.sdr.set_gain(gain_dB)
+    def setGainDefaults(self): # input gain in dB, "auto" by default
+        gain_list = ['lnagain', 'rxvga1', 'rxvga2', 'txvga1', 'txvga2']
+        gain_vals = [lnagain, rxvga1, rxvga2, txvga1, txvga2]
+        #NOTE: The format may be wrong
+        self.sdr.set__amplifier_gain(gain_list, gain_vals)
 
+'''
+Probs dont need this
     def getGain(self):                   # get tuner gain in dB
         return self.sdr.get_gain()
 
@@ -89,16 +96,24 @@ class rxSDR(threading.Thread):
         if (unit == "dB"):
             print("gains (dB):" + "\n" + str(gains))
         else: print("gains (0.1dB): " + "\n" + str(gains))
+'''
 
     def setFc(self, Fc, unit = "mhz"):
+        '''Auto converted to MHz later so pass in MHz now. This is messy I'll
+        clean it up if I have time'''
+        '''
         if (unit == "hz"):             Fc = Fc
         elif (unit == "khz"):          Fc = Fc * khz
         else:                          Fc = Fc * mhz
-        if (Fc < RX_MIN_FREQ):
+        '''
+        if (Fc < (RX_MIN_FREQ / mhz)):
             print("Error. Fc too low. Setting to " + str(RX_MIN_FREQ))
-            Fc = RX_MIN_FREQ
+            Fc = RX_MIN_FREQ / mhz
+        ### should be good
         self.sdr.set_center_freq(Fc)
 
+'''
+Probs don't need this
     def getFc(self, unit = "mhz"):      # get center frequency. defaults to mhz
         freq_hz = self.sdr.get_center_freq()
         if (unit == "hz"):      return freq_hz
@@ -108,12 +123,16 @@ class rxSDR(threading.Thread):
     def printFc(self, unit = "mhz"):
         if ((unit != "khz") and (unit != "hz")): unit = "mhz"
         print("Fc=" + str(self.getFc(unit)) + " " + unit)
+'''
 
     def setFs(self, Fs, unit = "hz"):     # default to Hz
+    '''This should be good to go'''
         if (unit == "khz"): self.sdr.set_sample_rate(Fs * khz)
         elif (unit == "mhz"): self.sdr.set_sample_rate(Fs * mhz)
         else: self.sdr.set_sample_rate(Fs)
 
+'''
+Probs don't need this:
     def getFs(self, unit):          # get sample rate. defaults to mhz
         freq_hz = self.sdr.get_sample_rate()
         if (unit == "hz"): return freq_hz
@@ -123,13 +142,15 @@ class rxSDR(threading.Thread):
     def printFs(self, unit):
         if ((unit != "hz") and (unit != "khz")): unit = "mhz"
         print("Fs=" + str(self.getFs(unit)) + " " + unit)
+'''
 
-    # inspired by Adafruit's model.py get_data function
     def getFrequencies(self, nfft):
+        '''This should be properly updated. Report back after test'''
         # Get width number of raw samples so the number of frequency bins is
 		# the same as the display width.  Add two because there will be mean/DC
 		# values in the results which are ignored.
-        samples = self.sdr.read_samples(nfft)
+		filename = '/usr/share/adafruit/webide/repositories/bladerf/BladeRX/trial.csv'
+        samples = self.sdr.rx_samples(nfft, 'csv', filename)
         hw_time = np.hamming(nfft)
         # fft and take abs() to get frequency bin magnitudes
         freqs = np.absolute(np.fft.fft(np.multiply(samples, hw_time)))
@@ -142,6 +163,7 @@ class rxSDR(threading.Thread):
         return freqs
     
     def _callback(self, sdr_data):
+        '''This can remain the same'''
         pub.sendMessage("sensor-messages.sdr-data", arg1=sdr_data)
     
     def get_reading(self, fc_list):
@@ -149,13 +171,9 @@ class rxSDR(threading.Thread):
         This function tests features that I add to the rxSDR class
         '''
 
-        # radio = rxSDR(30, fs, bw, gain)  # radio on RPi
-        # fc_list = np.linspace(fcLow, fcHigh, ((fcHigh - fcLow)/(SCAN_RES*fs) + 1))
-        # radio = self.sdr
-
         if SAVE:
             with open(FILENAME, 'a') as file:
-                file.write('fl,%f,fh,%f,fs,%f,mhz,gain,%s,nfft,%d,scan,%f'%(fcLow,fcHigh,fs,gain,NFFT,SCAN_RES)+'\n')
+                file.write('fs,%f,mhz,nfft,%d'%(fs,NFFT)+'\n')
         now = time.time()
         i = 0
         data = []
@@ -168,17 +186,18 @@ class rxSDR(threading.Thread):
                 with open(FILENAME, 'a') as f:
                     f.write(','.join(map(str, np.round(freqs, NUM_DECIMAL))) + '\n')
             if DATABASE:
-                params = ['freq',x,'fs',fs,'mhz','gain',gain,'nfft',NFFT]
+                params = ['freq',x,'fs',fs,'mhz','nfft',NFFT]
                 freqs = freqs.tolist()
                 freqs.insert(0, params)
             data[i].append(freqs)
             i = i + 1
         return data
-        # print("Scan required " + str(time.time() - now) + " seconds")
+        print("Scan required " + str(time.time() - now) + " seconds")
 
     
     def run(self):
-        fc_list = np.linspace(fcLow, fcHigh, ((fcHigh - fcLow)/(SCAN_RES*fs) + 1))
+        # fc_list = np.linspace(fcLow, fcHigh, ((fcHigh - fcLow)/(SCAN_RES*fs) + 1))
+        fc_list = [f1, f2, f3]
         while True:
             data = self.get_reading(fc_list)  # get the frequency data
             if data is not None:                     # if successful
