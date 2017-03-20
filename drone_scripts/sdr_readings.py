@@ -159,6 +159,8 @@ class rxSDR(threading.Thread):
         '''Send SDR scan data to subscribers'''
         pub.sendMessage("sensor-messages.sdr-data", arg1=sdr_data)
     
+    def get_average(data)
+    
     def get_reading(self, fc_list):
         '''
         This function tests features that I add to the rxSDR class
@@ -170,6 +172,9 @@ class rxSDR(threading.Thread):
         now = time.time()
         i = 0
         data = []
+        # store best channel data in form [avg of fft, frequency in MHz]
+        best_channel = [3000, fc]
+        
         for x in fc_list:
             data.append([])
             self.setFc(x, 'mhz', 'rx')
@@ -188,6 +193,11 @@ class rxSDR(threading.Thread):
             
             data[i].append(freqs)
             i = i + 1
+            fft_avg = sum(freqs) / float(len(freqs))
+            if fft_avg < best_channel[0]:
+                best_channel[0] = fft_avg
+                best_channel[1] = x
+                print('Should change to ' + str(x) + 'MHz')
         
         print("Scan required " + str(time.time() - now) + " seconds")
         return data
