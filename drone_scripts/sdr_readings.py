@@ -50,16 +50,9 @@ class rxSDR(threading.Thread):
         self._delay = 10
         self.daemon = True
         # Configure SDR parameters
-        #TODO: fix this
-        '''
-        self.sdr = rtl.RtlSdr()
-        self.setGainDefaults()
-        self.setFc(fc, "mhz")
-        self.setFs(fs, "mhz")
-        '''
         self.sdr = blade.blade_rf_sdr(1)         # init bladeRF, load FPGA
         self.setGainDefaults()
-        self.setFc(fc, 'mhz')
+        # self.setFc(fc, 'mhz', 'rx')
         self.setFs(fs, 'mhz')
         
         self.start()
@@ -73,7 +66,6 @@ class rxSDR(threading.Thread):
     def setGainDefaults(self): # input gain in dB, "auto" by default
         gain_list = ['lnagain', 'rxvga1', 'rxvga2', 'txvga1', 'txvga2']
         gain_vals = [lnagain, rxvga1, rxvga2, txvga1, txvga2]
-        #NOTE: The format may be wrong
         self.sdr.set_amplifier_gain(gain_list, gain_vals)
 
     '''
@@ -98,7 +90,7 @@ class rxSDR(threading.Thread):
         else: print("gains (0.1dB): " + "\n" + str(gains))
     '''
 
-    def setFc(self, Fc, unit = "mhz"):
+    def setFc(self, Fc, unit = "mhz", mode='rx'):
         '''Auto converted to MHz later so pass in MHz now. This is messy I'll
         clean it up if I have time'''
         '''
@@ -109,8 +101,8 @@ class rxSDR(threading.Thread):
         if (Fc < (RX_MIN_FREQ / mhz)):
             print("Error. Fc too low. Setting to " + str(RX_MIN_FREQ))
             Fc = RX_MIN_FREQ / mhz
-        ### should be good
-        self.sdr.set_center_freq('all', Fc)
+
+        self.sdr.set_center_freq(mode, Fc)
 
     '''
     Probs don't need this
@@ -152,8 +144,6 @@ class rxSDR(threading.Thread):
 		# values in the results which are ignored.
         filename = '/usr/share/adafruit/webide/repositories/seelab_drones/database_files/trial.csv'
         samples = self.sdr.rx_samples('1K', 'csv', filename)
-        print(samples)
-        print(type(samples))
         hw_time = np.hamming(nfft)
         # fft and take abs() to get frequency bin magnitudes
         freqs = np.absolute(np.fft.fft(np.multiply(samples, hw_time)))
@@ -166,7 +156,7 @@ class rxSDR(threading.Thread):
         return freqs
     
     def _callback(self, sdr_data):
-        '''This can remain the same'''
+        '''Send SDR scan data to subscribers'''
         pub.sendMessage("sensor-messages.sdr-data", arg1=sdr_data)
     
     def get_reading(self, fc_list):
@@ -182,7 +172,7 @@ class rxSDR(threading.Thread):
         data = []
         for x in fc_list:
             data.append([])
-            self.setFc(x, "mhz")
+            self.setFc(x, 'mhz', 'rx')
             if ((time.time() - now) < 0.025): time.sleep(0.025 - (time.time()-now)) # allow PLL to settle
             freqs = self.getFrequencies(NFFT)
             if SAVE:
@@ -194,9 +184,8 @@ class rxSDR(threading.Thread):
                 freqs.insert(0, params)
             data[i].append(freqs)
             i = i + 1
-        return data
-        print(data)
         print("Scan required " + str(time.time() - now) + " seconds")
+        return data
 
     
     def run(self):
