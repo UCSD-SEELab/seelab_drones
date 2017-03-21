@@ -172,8 +172,6 @@ def main(top_block_cls=tx_2400_r2, options=None, freq=None, fn=None):
     if options is None:
         options, _ = argument_parser().parse_args()
 
-    print(type(freq))
-    print(type(fn))
     if freq is not None and fn is not None:
         options.center_freq = freq
         options.filename=fn
@@ -182,14 +180,11 @@ def main(top_block_cls=tx_2400_r2, options=None, freq=None, fn=None):
     tb.start()
     transmit_time = 5                              # transmit for 5 seconds
     start_time = time.time()
+    
     while (time.time() - start_time < transmit_time):
         print('tx')
         time.sleep(0.5)
-        '''
-    try:
-        raw_input('Press Enter to quit: ')
-    except EOFError:
-        pass'''
+    
     tb.stop()
     tb.wait()
 
