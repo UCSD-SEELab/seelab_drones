@@ -18,6 +18,8 @@ from time import sleep
 import time
 import threading
 from pubsub import pub
+### Trial for new way to interact:
+import tx_2400_r2
 
 SAVE = False
 DATABASE = True
@@ -172,7 +174,9 @@ class rxSDR(threading.Thread):
         BTW this is hacky and gross and there is for sure a better way'''
         
         global current_freq
-        
+        prefix = 'sudo python '
+        script_path = ('/usr/share/adafruit/webide/repositories/seelab_drones/'
+                    'drone_scripts/tx_2400_r2.py')
         print("Sending message to switch to " + str(new_channel) + "MHz")
 
         if new_channel == 925:
@@ -182,9 +186,6 @@ class rxSDR(threading.Thread):
         else:
             file = '_send_f1.bin'
         
-        prefix = 'sudo python '
-        script_path = ('/usr/share/adafruit/webide/repositories/seelab_drones/'
-                    'drone_scripts/tx_2400_r2.py')
         tx_str = (prefix + script_path + ' -f ' + str(current_freq*mhz) +
                     ' -n ' + file)
         print(tx_str)
@@ -201,8 +202,49 @@ class rxSDR(threading.Thread):
             print('original: ' + str(current_freq))
             current_freq = new_channel
             print('new: ' + str(current_freq))
-
+    
+    def send_channel_change_better(self, new_channel):
+        '''This will use the GNU Radio script to send out the approriate data
+        to tell the other drone(s) to switch to whichever frequency was
+        determined to be the best
         
+        We want to transmit the new frequency (by transmitting the proper file)
+            on the current frequency (so all SDRs still on that can know what
+            frequency to switch to)
+        
+        BTW this is hacky and gross and there is for sure a better way'''
+        
+        global current_freq
+        '''
+        prefix = 'sudo python '
+        script_path = ('/usr/share/adafruit/webide/repositories/seelab_drones/'
+                    'drone_scripts/tx_2400_r2.py')'''
+        print("Sending message to switch to " + str(new_channel) + "MHz")
+
+        if new_channel == 925:
+            file = '_send_f2.bin'
+        elif new_channel == 1270:
+            file = '_send_f3.bin'
+        else:
+            file = '_send_f1.bin'
+        '''
+        tx_str = (prefix + script_path + ' -f ' + str(current_freq*mhz) +
+                    ' -n ' + file)
+        print(tx_str)'''
+        
+        tx_error_flag = False
+        '''
+        try:
+            output = subprocess.check_output(tx_str)
+        except:
+            print("Error running GNU Radio scripts")
+            tx_error_flag = True'''
+        
+        if not tx_error_flag:
+            print('original: ' + str(current_freq))
+            current_freq = new_channel
+            print('new: ' + str(current_freq))
+
     
     def run(self):
         # fc_list = np.linspace(fcLow, fcHigh, ((fcHigh - fcLow)/(SCAN_RES*fs) + 1))
