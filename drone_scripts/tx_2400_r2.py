@@ -166,7 +166,7 @@ def argument_parser():
     return parser
 
 
-def main(top_block_cls=tx_2400_r2, tx_time=5, options=None, freq=None, fn=None):
+def main(top_block_cls=tx_2400_r2, options=None, tx_time=5, freq=None, fn=None):
     top_block_cls=tx_2400_r2
     blade_rx.blade_rf_sdr(1)
     if options is None:
