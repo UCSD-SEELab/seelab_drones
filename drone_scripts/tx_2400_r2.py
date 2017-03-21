@@ -166,7 +166,7 @@ def argument_parser():
     return parser
 
 
-def main(top_block_cls=tx_2400_r2, options=None, freq=None, fn=None):
+def main(top_block_cls=tx_2400_r2, tx_time=5, options=None, freq=None, fn=None):
     top_block_cls=tx_2400_r2
     blade_rx.blade_rf_sdr(1)
     if options is None:
@@ -178,11 +178,9 @@ def main(top_block_cls=tx_2400_r2, options=None, freq=None, fn=None):
 
     tb = top_block_cls(center_freq=options.center_freq, filename=options.filename)
     tb.start()
-    transmit_time = 5                              # transmit for 5 seconds
     start_time = time.time()
     
-    while (time.time() - start_time < transmit_time):
-        print('tx')
+    while (time.time() - start_time < tx_time):
         time.sleep(0.5)
     
     tb.stop()
