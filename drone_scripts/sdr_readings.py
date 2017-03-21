@@ -180,12 +180,12 @@ class rxSDR(threading.Thread):
         tx_str = (prefix + script_path + ' -f ' + str(new_channel*mhz) +
                     ' -n ' + file)
         print(tx_str)
-        
+        '''
         try:
             output = subprocess.check_output(tx_str)
         except:
             print("Error running GNU Radio scripts")
-            
+        '''
         
     
     def run(self):
