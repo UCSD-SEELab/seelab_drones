@@ -11,6 +11,8 @@ NOTE: You must have a HAM radio license to do any transmitting!
 
 # import rtlsdr as rtl
 import blade_rx as blade
+import os
+import subprocess
 import numpy as np
 from time import sleep
 import time
@@ -159,8 +161,17 @@ class rxSDR(threading.Thread):
     def send_channel_change(self, new_channel):
         '''This will use the GNU Radio script to send out the approriate data
         to tell the other drone(s) to switch to whichever frequency was
-        determined to be the best'''
+        determined to be the best
+        
+        BTW this is hacky and gross'''
+        
         print("Sending message to switch to " + str(new_channel) + "MHz")
+        prefix = 'sudo python '
+        try:
+            output = subprocess.check_output(prefix)
+        except:
+            print("Error running GNU Radio scripts")
+        
     
     def run(self):
         # fc_list = np.linspace(fcLow, fcHigh, ((fcHigh - fcLow)/(SCAN_RES*fs) + 1))
@@ -171,6 +182,6 @@ class rxSDR(threading.Thread):
             if data is not None:                     # if successful
                 self._callback(data)                 # send the data to be logged
             
-            
+            self.send_channel_change(next_channel)
             
             time.sleep(self._delay)
