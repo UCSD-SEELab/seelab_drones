@@ -190,13 +190,13 @@ class rxSDR(threading.Thread):
         print(tx_str)
         
         tx_error_flag = False
-        '''
+        
         try:
             output = subprocess.check_output(tx_str)
         except:
             print("Error running GNU Radio scripts")
             tx_error_flag = True
-        '''
+        
         if not tx_error_flag:
             print('original: ' + str(current_freq))
             current_freq = new_channel
