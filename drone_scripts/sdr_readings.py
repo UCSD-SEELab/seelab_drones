@@ -175,8 +175,9 @@ class rxSDR(threading.Thread):
             file = '_send_f1.bin'
         
         prefix = 'sudo python '
-        print(new_channel*mhz)
-        tx_str = (prefix + 'tx_2400_r2.py' + ' -f ' + str(new_channel*mhz) +
+        script_path = ('/usr/share/adafruit/webide/repositories/seelab_drones/'
+                    'drone_scripts/tx_2400_r2.py')
+        tx_str = (prefix + script_path + ' -f ' + str(new_channel*mhz) +
                     ' -n ' + file)
         print(tx_str)
         
