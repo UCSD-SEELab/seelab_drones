@@ -180,10 +180,16 @@ def main(top_block_cls=tx_2400_r2, options=None, freq=None, fn=None):
 
     tb = top_block_cls(center_freq=options.center_freq, filename=options.filename)
     tb.start()
+    transmit_time = 5                              # transmit for 5 seconds
+    start_time = time.time()
+    while (time.time() - start_time < transmit_time):
+        print('tx')
+        time.sleep(0.5)
+        '''
     try:
         raw_input('Press Enter to quit: ')
     except EOFError:
-        pass
+        pass'''
     tb.stop()
     tb.wait()
 
