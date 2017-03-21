@@ -23,7 +23,8 @@ SAVE = False
 DATABASE = True
 FILENAME = "blade_2_5mhz.txt"
 
-mhz = 1000000.0
+#mhz = 1000000.0
+mhz = 1000000                          #can probably do as an int
 khz = 1000.0
 RX_MIN_FREQ = 300 * mhz
 np.set_printoptions(precision=4)
@@ -35,6 +36,7 @@ f1 = 440
 f2 = 925
 f3 = 1270
 fc = f1                                      # default frequency in MHz
+current_freq = fc
 lnagain = 6
 rxvga1 = 30
 rxvga2 = 30
@@ -163,7 +165,13 @@ class rxSDR(threading.Thread):
         to tell the other drone(s) to switch to whichever frequency was
         determined to be the best
         
+        We want to transmit the new frequency (by transmitting the proper file)
+            on the current frequency (so all SDRs still on that can know what
+            frequency to switch to)
+        
         BTW this is hacky and gross and there is for sure a better way'''
+        
+        global current_freq
         
         print("Sending message to switch to " + str(new_channel) + "MHz")
 
@@ -177,15 +185,23 @@ class rxSDR(threading.Thread):
         prefix = 'sudo python '
         script_path = ('/usr/share/adafruit/webide/repositories/seelab_drones/'
                     'drone_scripts/tx_2400_r2.py')
-        tx_str = (prefix + script_path + ' -f ' + str(int(new_channel*mhz)) +
+        tx_str = (prefix + script_path + ' -f ' + str(current_freq*mhz) +
                     ' -n ' + file)
         print(tx_str)
+        
+        tx_error_flag = False
         '''
         try:
             output = subprocess.check_output(tx_str)
         except:
             print("Error running GNU Radio scripts")
+            tx_error_flag = True
         '''
+        if not tx_error_flag:
+            print('original: ' + str(current_freq))
+            current_freq = new_channel
+            print('new: ' + str(current_freq))
+
         
     
     def run(self):
