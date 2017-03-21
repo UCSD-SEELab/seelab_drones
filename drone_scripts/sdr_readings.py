@@ -178,7 +178,7 @@ class rxSDR(threading.Thread):
         print(new_channel*mhz)
         tx_str = (prefix + 'tx_2400_r2.py' + ' -f ' + str(new_channel*mhz) +
                     ' -n ' + file)
-        #print(rx_str)
+        print(tx_str)
         
         try:
             output = subprocess.check_output(tx_str)
