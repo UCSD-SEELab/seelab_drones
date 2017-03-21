@@ -25,7 +25,6 @@ SAVE = False
 DATABASE = True
 FILENAME = "blade_2_5mhz.txt"
 
-#mhz = 1000000.0
 mhz = 1000000                          #can probably do as an int
 khz = 1000.0
 RX_MIN_FREQ = 300 * mhz
@@ -204,21 +203,9 @@ class rxSDR(threading.Thread):
             print('new: ' + str(current_freq))
     
     def send_channel_change_better(self, new_channel):
-        '''This will use the GNU Radio script to send out the approriate data
-        to tell the other drone(s) to switch to whichever frequency was
-        determined to be the best
-        
-        We want to transmit the new frequency (by transmitting the proper file)
-            on the current frequency (so all SDRs still on that can know what
-            frequency to switch to)
-        
-        BTW this is hacky and gross and there is for sure a better way'''
+        '''This may be the better way'''
         
         global current_freq
-        '''
-        prefix = 'sudo python '
-        script_path = ('/usr/share/adafruit/webide/repositories/seelab_drones/'
-                    'drone_scripts/tx_2400_r2.py')'''
         print("Sending message to switch to " + str(new_channel) + "MHz")
 
         if new_channel == 925:
@@ -227,23 +214,14 @@ class rxSDR(threading.Thread):
             file = '_send_f3.bin'
         else:
             file = '_send_f1.bin'
-        '''
-        tx_str = (prefix + script_path + ' -f ' + str(current_freq*mhz) +
-                    ' -n ' + file)
-        print(tx_str)'''
         
-        tx_error_flag = False
-        '''
-        try:
-            output = subprocess.check_output(tx_str)
-        except:
-            print("Error running GNU Radio scripts")
-            tx_error_flag = True'''
+        # Don't worry about the first two args, can figure out if you look in
+        # the GNU Radio script if you really care
+        print("transmitting on: " + str(current_freq))
+        tx_2400_r2.main(None, None, current_freq*mhz, file)
         
-        if not tx_error_flag:
-            print('original: ' + str(current_freq))
-            current_freq = new_channel
-            print('new: ' + str(current_freq))
+        current_freq = new_channel
+        print('Next transmission on: ' + str(current_freq))
 
     
     def run(self):
@@ -255,6 +233,6 @@ class rxSDR(threading.Thread):
             if data is not None:                     # if successful
                 self._callback(data)                 # send the data to be logged
             
-            self.send_channel_change(next_channel)
+            self.send_channel_change_better(next_channel)
             
             time.sleep(self._delay)
