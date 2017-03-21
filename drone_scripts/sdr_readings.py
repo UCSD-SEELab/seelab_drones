@@ -163,14 +163,28 @@ class rxSDR(threading.Thread):
         to tell the other drone(s) to switch to whichever frequency was
         determined to be the best
         
-        BTW this is hacky and gross'''
+        BTW this is hacky and gross and there is for sure a better way'''
         
         print("Sending message to switch to " + str(new_channel) + "MHz")
+
+        if new_channel == 925:
+            file = '_send_f2.bin'
+        elif new_channel == 1270:
+            file = '_send_f3.bin'
+        else:
+            file = '_send_f1.bin'
+        
         prefix = 'sudo python '
+        print(new_channel*mhz)
+        rx_str = (prefix + 'tx_2400_r2.py' + '-f ' + str(new_channel*mhz) +
+                    '-n ' + file)
+        print(rx_str)
+        '''
         try:
             output = subprocess.check_output(prefix)
         except:
             print("Error running GNU Radio scripts")
+            '''
         
     
     def run(self):
