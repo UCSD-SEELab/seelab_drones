@@ -16,7 +16,7 @@ from gnuradio.filter import firdes
 from optparse import OptionParser
 import osmosdr
 import time
-import blade_rx
+# import blade_rx
 
 
 class tx_2400_r2(gr.top_block):
@@ -167,7 +167,7 @@ def argument_parser():
 
 
 def main(top_block_cls=tx_2400_r2, options=None):
-    blade_rx.blade_rf_sdr(1).load_fpga(True)
+    # blade_rx.blade_rf_sdr(1).load_fpga(True)
     if options is None:
         options, _ = argument_parser().parse_args()
 
