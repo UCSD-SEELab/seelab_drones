@@ -167,10 +167,13 @@ def argument_parser():
 
 
 def main(top_block_cls=tx_2400_r2, options=None, freq=None, fn=None):
+    top_block_cls=tx_2400_r2
     blade_rx.blade_rf_sdr(1)
     if options is None:
         options, _ = argument_parser().parse_args()
 
+    print(type(freq))
+    print(type(fn))
     if freq is not None and fn is not None:
         options.center_freq = freq
         options.filename=fn
