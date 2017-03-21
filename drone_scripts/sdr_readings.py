@@ -38,6 +38,7 @@ f2 = 925
 f3 = 1270
 fc = f1                                      # default frequency in MHz
 current_freq = fc
+tx_time = 5                                  # num seconds to tx msg for
 lnagain = 6
 rxvga1 = 30
 rxvga2 = 30
@@ -206,6 +207,7 @@ class rxSDR(threading.Thread):
         '''This may be the better way'''
         
         global current_freq
+        global tx_time
         print("Sending message to switch to " + str(new_channel) + "MHz")
 
         if new_channel == 925:
@@ -218,7 +220,7 @@ class rxSDR(threading.Thread):
         # Don't worry about the first two args, can figure out if you look in
         # the GNU Radio script if you really care
         print("transmitting on: " + str(current_freq))
-        tx_2400_r2.main(None, None, current_freq*mhz, file)
+        tx_2400_r2.main(None, None, tx_time, current_freq*mhz, file)
         
         current_freq = new_channel
         print('Next transmission on: ' + str(current_freq))
