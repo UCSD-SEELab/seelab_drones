@@ -25,10 +25,10 @@ import extract_bits
 SAVE = False
 DATABASE = True
 FILENAME = "blade_2_5mhz.txt"
-MASTER = True
+MASTER = True                               # master determines freq to tx on
 SLAVE = False
 
-mhz = 1000000                          #can probably do as an int
+mhz = 1000000
 khz = 1000.0
 RX_MIN_FREQ = 300 * mhz
 np.set_printoptions(precision=4)
