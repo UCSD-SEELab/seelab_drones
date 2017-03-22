@@ -93,14 +93,16 @@ def check_str(extracted_str, extracted_list):
     
     if lowest_hd[0] <= HD_LIMIT:
         freq = rx_freqs[lowest_hd[1]]
-        if VERBOSE or BASIC: print("(S) change freq to " + str(freq) + " mhz")
+        if VERBOSE or BASIC:
+            print("(S) Received cmd to change freq to " + str(freq) + " MHz")
     else:
         if VERBOSE: print("String unusable. Taking average value...")
         avg = sum(extracted_list) / float(len(extracted_list))
         closest_val = min(rx_avgs, key=lambda x:abs(x-avg))
         freq_idx = rx_avgs.index(closest_val)
         freq = rx_freqs[freq_idx]
-        if VERBOSE or BASIC: print("(A) change freq to " + str(freq) + " mhz")
+        if VERBOSE or BASIC:
+            print("(A) Received cmd to change freq to " + str(freq) + " MHz")
     return freq
 
 
