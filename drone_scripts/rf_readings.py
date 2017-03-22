@@ -23,6 +23,7 @@ from pubsub import pub
 #   wlan1. If unsure, use "ifconfig -a" to see the network connection config, and
 #   choose the wlan that is connected to the base station.
 interface = "wlan1"
+# interface = "wlan0"
 
 # You can add or change the functions to parse the properties of each AP (cell)
 # below. They take one argument, the bunch of text describing one cell in iwlist
