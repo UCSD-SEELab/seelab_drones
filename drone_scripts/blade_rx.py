@@ -21,7 +21,7 @@ import subprocess
 import time
 import sys
 import gnuradio
-# import bladeRF
+import csv
 
 if machine == 'drone':
     prefix = 'bladeRF-cli'
@@ -137,18 +137,20 @@ class blade_rf_sdr():
         if mode == 'tx' or mode == 'all':
             sample_cmd = ('set bandwidth tx ' + str(sample_freq) + 'M')
             self.send_exec(sample_cmd)
-    
+
+
     def set_center_freq(self, mode, center_freq):
         '''Pass in center freq in MHz'''
         if mode == 'rx' or mode == 'all':
             freq_cmd = ('set frequency rx ' + str(center_freq) + 'M')
-            print("Setting rx center frequency to " + str(center_freq))
+            # print("Setting rx center frequency to " + str(center_freq))
             self.send_exec(freq_cmd)
         if mode == 'tx' or mode == 'all':
             freq_cmd = ('set frequency tx ' + str(center_freq) + 'M')
-            print("Setting tx center frequency to " + str(center_freq))
+            # print("Setting tx center frequency to " + str(center_freq))
             self.send_exec(freq_cmd)
-	
+
+
     def set_amplifier_gain(self, amplifier, gain):
         '''This function sets the gain of the Rx and Tx amplifiers on the
         bladeRF. It can take multiple arguments as a list, but the number of
@@ -174,26 +176,30 @@ class blade_rf_sdr():
     
     def rx_samples(self, n, file_format = None, filepath = None):
         '''
-        For some reason this gives file not configured BS. Will try ghetto way
-        
-        rx_cfg_exec = ('rx config file='+filepath + ' format='+file_format + 
-        ' n=' + n)
-        self.send_exec(rx_cfg_exec)
-        rx_start_exec = 'rx start'
-        self.send_exec(rx_start_exec)
-        rx_wait_exec = 'rx wait'
-        self.send_exec(rx_wait_exec)
-        self.is_idle('rx')
+        Not pretty but it works
+        Returns the fft data received by the bladeRF
         '''
-        rx_cfg_exec = ('rx1 config file='+filepath + ' format='+file_format + 
-        ' n=' + n)
-        self.send_command('-i')      # put in interactive mode
-        subprocess.check_output(rx_cfg_exec)
-        self.send_exec('rx start')
-        self.send_exec('rx wait')
-        self.is_idle('rx')
-    
-    
+        rx_cfg_exec = ('rx config file='+filepath + ' format='+file_format + 
+        ' n=' + n + '; rx start; rx wait; rx')
+        self.send_exec(rx_cfg_exec)
+        return self.list_from_csv(filepath)
+
+
+    def list_from_csv(self, filepath):
+        '''This returns a list of the magnitudes for each of nfft points from
+        the .csv file output by the bladeRF.
+        
+        Note that bladeRF outputs a column of I and a column of Q. We take the
+        magnitude of these (~voltage, not ~power) and return the list'''
+        with open(filepath, 'rb') as f:
+            reader = csv.reader(f)
+            data_list = list(reader)
+        mag_list = [None] * len(data_list)
+        for i in range(0, len(data_list)):
+            mag_list[i] = (int(data_list[i][0])**2 + int(data_list[i][1])**2)**0.5
+        return mag_list
+
+
     def run(self, sdr):
         # sdr.open_blade('1')
         # sdr.set_sample_rate(6)
