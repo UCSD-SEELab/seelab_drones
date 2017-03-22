@@ -19,6 +19,7 @@ import math
 import osmosdr
 import time
 import blade_rx
+import subprocess
 
 
 class rx_2400_r2(gr.top_block):
@@ -57,7 +58,7 @@ class rx_2400_r2(gr.top_block):
         self.osmosdr_source_0.set_if_gain(0, 0)
         self.osmosdr_source_0.set_bb_gain(rx_vga_gain, 0)
         self.osmosdr_source_0.set_antenna("", 0)
-        self.osmosdr_source_0.set_bandwidth(0, 0)
+        self.osmosdr_source_0.set_bandwidth(1500000, 0)
           
         self.low_pass_filter_0 = filter.fir_filter_ccf(1, firdes.low_pass(
         	1, samp_rate_tx, 6000, 6000, firdes.WIN_HAMMING, 6.76))
@@ -160,6 +161,7 @@ def argument_parser():
 
 
 def main(top_block_cls=rx_2400_r2, options=None, rx_time=5, freq=None):
+    #subprocess.check_output(['bladeRF-cli', '-v', 'verbose'])
     top_block_cls=rx_2400_r2
     if options is None:
         options, _ = argument_parser().parse_args()
