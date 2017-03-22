@@ -9,7 +9,6 @@ HAM or ISM bands.
 NOTE: You must have a HAM radio license to do any transmitting!
 '''
 
-# import rtlsdr as rtl
 import blade_rx as blade
 import os
 import subprocess
@@ -20,6 +19,8 @@ import threading
 from pubsub import pub
 ### Trial for new way to interact:
 import tx_2400_r2
+import rx_2400_r2
+import extract_bits
 
 SAVE = False
 DATABASE = True
@@ -37,8 +38,11 @@ f1 = 440
 f2 = 925
 f3 = 1270
 fc = f1                                      # default frequency in MHz
-current_freq = fc
+current_freq_rx = fc
+current_freq_tx = fc
 tx_time = 5                                  # num seconds to tx msg for
+rx_time = 5                                  # num seconds to rx msg for
+tx_trans_time = 30                           # seconds before switch freq
 lnagain = 6
 rxvga1 = 30
 rxvga2 = 30
@@ -163,38 +167,59 @@ class rxSDR(threading.Thread):
         return data, best_channel[1]
 
     
-    def send_channel_change(self, new_channel):
-        '''This may be the better way'''
+    def send_channel_info(self, next_freq):
+        '''This function blasts out the file for the next frequency to switch
+        to, on the current frequency'''
         
-        global current_freq
-        global tx_time
-        print("Sending message to switch to " + str(new_channel) + "MHz")
+        # global current_freq_tx
+        # global tx_time
+        print("Sending message to switch to " + str(next_freq) + "MHz")
 
-        if new_channel == 925:
+        if next_freq == 925:
             file = '_send_f2.bin'
-        elif new_channel == 1270:
+        elif next_freq == 1270:
             file = '_send_f3.bin'
         else:
             file = '_send_f1.bin'
         
         # Don't worry about the first two args, can figure out if you look in
         # the GNU Radio script if you really care
-        print("transmitting on: " + str(current_freq))
-        tx_2400_r2.main(None, None, tx_time, current_freq*mhz, file)
+        print("transmitting on: " + str(current_freq_tx))
+        tx_2400_r2.main(None, None, tx_time, current_freq_tx*mhz, file)
         
-        current_freq = new_channel
-        print('Next transmission on: ' + str(current_freq))
+        print('Next transmission on: ' + str(next_freq))
+
+
+    def change_channel(self, next_freq):
+        '''Send command to change transmitting frequency to the new one.
+        This is called after some delay to make sure nearby drones have had a
+        chance to "hear" about the frequency change. Future SEELab members can
+        add some ack upon frequency change to eliminate the need for this.'''
+        global current_freq_tx
+        current_freq_tx = next_freq
+
+    def receive_channel_info(self):
+        print("receiving on: " + str(current_freq_rx))
+        rx_2400_r2.main(None, None, rx_time, current_freq_rx*mhz)
+        extract_bits.main()
 
     
     def run(self):
         # fc_list = np.linspace(fcLow, fcHigh, ((fcHigh - fcLow)/(SCAN_RES*fs) + 1))
         fc_list = [f1, f2, f3]
+        start_time = time.time()
         while True:
             data, next_channel = self.get_reading(fc_list)
             
             if data is not None:                     # if successful
                 self._callback(data)                 # send the data to be logged
+            self.receive_channel_info()
+            '''
+            self.send_channel_info(next_channel)
             
-            self.send_channel_change(next_channel)
-            
+            if time.time() - start_time >= tx_trans_time:
+                self.change_channel(next_channel)
+                print("Cmd to change channel sent")
+                start_time = time.time()
+            '''
             time.sleep(self._delay)
