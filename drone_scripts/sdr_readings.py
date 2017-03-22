@@ -27,8 +27,8 @@ SAVE = False
 DATABASE = True
 FILENAME = "blade_2_5mhz.txt"
 ### Only enable one or the other, not both!
-MASTER = False                               # master determines freq to tx on
-SLAVE = True
+MASTER = True                               # master determines freq to tx on
+SLAVE = False
 
 mhz = 1000000
 khz = 1000.0
@@ -172,10 +172,10 @@ class rxSDR(threading.Thread):
         '''This function blasts out the file for the next frequency to switch
         to, on the current frequency'''
         
-        # global current_freq_tx
-        # global tx_time
-        print("Sending message to switch to " + str(next_freq) + "MHz")
-
+        print('')
+        print("%%% Sending message to switch to " + str(next_freq) + " MHz")
+        print('')
+        
         if next_freq == 925:
             file = '_send_f2.bin'
         elif next_freq == 1270:
@@ -185,10 +185,10 @@ class rxSDR(threading.Thread):
         
         # Don't worry about the first two args, can figure out if you look in
         # the GNU Radio script if you really care
-        print("transmitting on: " + str(current_freq_tx))
+        print("##### Transmitting on: " + str(current_freq_tx) + ' MHz')
+        print('Next transmission on: ' + str(next_freq) + ' MHz')
+        print('')
         tx_2400_r2.main(None, None, tx_time, current_freq_tx*mhz, file)
-        
-        print('Next transmission on: ' + str(next_freq))
 
 
     def change_tx_channel(self, next_freq):
@@ -198,7 +198,7 @@ class rxSDR(threading.Thread):
         add some ack upon frequency change to eliminate the need for this.'''
         global current_freq_tx
         print("Changing tx freq from %d to %d MHz"%
-                (current_freq_tx, next_channel))
+                (current_freq_tx, next_freq))
         current_freq_tx = next_freq
         
     
