@@ -21,7 +21,7 @@ import time
 
 class tx_2400_r2(gr.top_block):
 
-    def __init__(self, center_freq=446500000, filename="_send.bin"):
+    def __init__(self, center_freq=440000000, filename="_send.bin"):
         gr.top_block.__init__(self, "Tx 2400 R2")
 
         ##################################################
@@ -158,7 +158,7 @@ class tx_2400_r2(gr.top_block):
 def argument_parser():
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
     parser.add_option(
-        "-f", "--center-freq", dest="center_freq", type="intx", default=446500000,
+        "-f", "--center-freq", dest="center_freq", type="intx", default=440000000,
         help="Set center_freq [default=%default]")
     parser.add_option(
         "-n", "--filename", dest="filename", type="string", default="_send.bin",
