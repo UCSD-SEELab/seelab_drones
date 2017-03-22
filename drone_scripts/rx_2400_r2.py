@@ -159,16 +159,24 @@ def argument_parser():
     return parser
 
 
-def main(top_block_cls=rx_2400_r2, options=None):
+def main(top_block_cls=rx_2400_r2, options=None, rx_time=5, freq=None):
+    top_block_cls=rx_2400_r2
     if options is None:
         options, _ = argument_parser().parse_args()
-
+    
+    if freq is not None:
+        options.center_freq = freq
     tb = top_block_cls(center_freq=options.center_freq)
     tb.start()
+    start_time = time.time()
+    
+    while (time.time() - start_time < rx_time):
+        print(rx)
+    '''
     try:
         raw_input('Press Enter to quit: ')
     except EOFError:
-        pass
+        pass'''
     tb.stop()
     tb.wait()
 
