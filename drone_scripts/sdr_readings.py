@@ -11,6 +11,10 @@ NOTE: You must have a HAM radio license to do any transmitting!
 TODO: find a way to suppress the bladeRF/GNU Radio output for cleaner terminal
 '''
 
+### Only enable one or the other, not both!
+MASTER = True                               # master determines freq to tx on
+SLAVE = False
+
 import blade_rx as blade
 import os
 import subprocess
@@ -26,9 +30,7 @@ import extract_bits
 SAVE = False
 DATABASE = True
 FILENAME = "blade_2_5mhz.txt"
-### Only enable one or the other, not both!
-MASTER = True                               # master determines freq to tx on
-SLAVE = False
+
 
 mhz = 1000000
 khz = 1000.0
