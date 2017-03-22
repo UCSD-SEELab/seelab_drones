@@ -207,7 +207,7 @@ class rxSDR(threading.Thread):
         current_freq_rx = next_freq
 
     def receive_channel_info(self):
-        print("receiving on: " + str(current_freq_rx))
+        print("Listening for messages on: " + str(current_freq_rx) + ' MHz...')
         rx_2400_r2.main(None, None, rx_time, current_freq_rx*mhz)
         output = extract_bits.main()
         # print(output)
