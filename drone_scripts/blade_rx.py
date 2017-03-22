@@ -24,13 +24,11 @@ import sys
 import gnuradio
 import csv
 
-if machine == 'drone':
+if machine == 'laptop':
     prefix = 'bladeRF-cli'
     serial = 'f0da8b1365ac17c3a22d33e1130f2087'
-	# Experimental, may not yet work
-	subprocess.check_output('sudo bladeRF-cli -h ' + verbosity)
 elif machine == 'drone':
-    prefix = 'sudo bladeRF-cli'
+    prefix = 'bladeRF-cli'
     serial = '155002437db445798af3a5437a906ba2'
 
 class blade_rf_sdr():
@@ -43,6 +41,10 @@ class blade_rf_sdr():
             sys.exit("No BladeRF found. Restart program")
         
         self.load_fpga()
+        if machine == 'drone':
+            # Experimental, may not yet work
+            subprocess.check_output([prefix, '-v', verbosity])
+            # print('drone')
     
     def find_device(self, num_attempts, delay):
         while True:
