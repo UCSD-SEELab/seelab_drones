@@ -163,8 +163,7 @@ class rxSDR(threading.Thread):
                 best_channel[0] = fft_avg
                 best_channel[1] = x
 
-        # print('Should change to ' + str(best_channel[1]) + 'MHz')
-        print("Scan required " + str(time.time() - now) + " seconds")
+        # print("Scan required " + str(time.time() - now) + " seconds")
         
         return data, best_channel[1]
 
@@ -181,7 +180,7 @@ class rxSDR(threading.Thread):
             file = '_send_f2.bin'
         elif next_freq == 1270:
             file = '_send_f3.bin'
-        else:
+        else: # then its 440 MHz
             file = '_send_f1.bin'
         
         # Don't worry about the first two args, can figure out if you look in
