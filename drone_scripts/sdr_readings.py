@@ -25,8 +25,9 @@ import extract_bits
 SAVE = False
 DATABASE = True
 FILENAME = "blade_2_5mhz.txt"
-MASTER = True                               # master determines freq to tx on
-SLAVE = False
+### Only enable one or the other, not both!
+MASTER = False                               # master determines freq to tx on
+SLAVE = True
 
 mhz = 1000000
 khz = 1000.0
@@ -190,23 +191,34 @@ class rxSDR(threading.Thread):
         print('Next transmission on: ' + str(next_freq))
 
 
-    def change_channel(self, next_freq):
+    def change_tx_channel(self, next_freq):
         '''Send command to change transmitting frequency to the new one.
         This is called after some delay to make sure nearby drones have had a
         chance to "hear" about the frequency change. Future SEELab members can
         add some ack upon frequency change to eliminate the need for this.'''
         global current_freq_tx
         current_freq_tx = next_freq
+        
+    
+    def change_rx_channel(self, next_freq):
+        '''Same as above, but for Rx channel'''
+        global current_freq_rx
+        current_freq_rx = next_freq
 
     def receive_channel_info(self):
         print("receiving on: " + str(current_freq_rx))
         rx_2400_r2.main(None, None, rx_time, current_freq_rx*mhz)
         output = extract_bits.main()
         print(output)
+        return output
 
     
     def run(self):
-        # fc_list = np.linspace(fcLow, fcHigh, ((fcHigh - fcLow)/(SCAN_RES*fs) + 1))
+        '''Note that this is a bit ugly. "next_channel" is what we would predict
+        we should communicate on next. In this setting though that is controlled
+        by the master device, so if a slave drone it doesn't matter. For slave
+        drones we just need to worry about what channel to receive on, so we use
+        "next_freq"'''
         fc_list = [f1, f2, f3]
         start_time = time.time()
         while True:
@@ -214,13 +226,18 @@ class rxSDR(threading.Thread):
             
             if data is not None:                     # if successful
                 self._callback(data)                 # send the data to be logged
-            self.receive_channel_info()
-            '''
-            self.send_channel_info(next_channel)
             
-            if time.time() - start_time >= tx_trans_time:
-                self.change_channel(next_channel)
-                print("Cmd to change channel sent")
-                start_time = time.time()
-            '''
+            if MASTER:
+                self.send_channel_info(next_channel)
+                if time.time() - start_time >= tx_trans_time:
+                    self.change_tx_channel(next_channel)
+                    print("Cmd to change tx channel sent")
+                    start_time = time.time()
+            
+            if SLAVE:
+                next_freq = self.receive_channel_info()
+                if next_freq != -1:
+                    self.change_rx_channel(next_freq)
+                    print("Cmd to change rx channel sent")
+            
             time.sleep(self._delay)
