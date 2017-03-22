@@ -15,6 +15,7 @@ https://github.com/Nuand/bladeRF/wiki/Getting-Started%3A-Verifying-Basic-Device-
 interface = 'USB2' # make this automatic. Hi-Speed vs SuperSpeed
 machine =   'drone'
 default_fpga = '/usr/share/adafruit/webide/repositories/seelab_drones/drone_scripts/hostedx40.rbf'
+verbosity = 'critical'
 
 import os
 import subprocess
@@ -26,6 +27,8 @@ import csv
 if machine == 'drone':
     prefix = 'bladeRF-cli'
     serial = 'f0da8b1365ac17c3a22d33e1130f2087'
+	# Experimental, may not yet work
+	subprocess.check_output('sudo bladeRF-cli -h ' + verbosity)
 elif machine == 'drone':
     prefix = 'sudo bladeRF-cli'
     serial = '155002437db445798af3a5437a906ba2'
