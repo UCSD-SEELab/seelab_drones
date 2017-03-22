@@ -443,8 +443,10 @@ if __name__ == '__main__':
 
     dc = DroneCoordinator(args.primary_ip, args.secondary_ip, args.threshold)
 
-    dc.demo_control_loop()
-    #dc.launch_drone(dc.primary_drone_addr)
+    #dc.demo_control_loop()
+    dc.launch_drone(dc.primary_drone_addr)
+    if dc.secondary_drone_addr is not None:
+        dc.launch_drone(dc.secondary_drone_addr)
     #dc.run_test_mission('courtyard1.json', dc.primary_drone_addr)
     interact(local=locals())
 
