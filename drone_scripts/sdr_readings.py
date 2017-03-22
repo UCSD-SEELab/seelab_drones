@@ -7,10 +7,16 @@ We will be using 440 MHz, 925 MHz, and 1270 MHz to talk on since these are in
 HAM or ISM bands.
 
 NOTE: You must have a HAM radio license to do any transmitting!
+
+TODO: find a way to suppress the bladeRF/GNU Radio output for cleaner terminal
 '''
 
 import blade_rx as blade
 import os
+### Experimental to suppress output
+import sys
+from contextlib import contextmanager
+### End
 import subprocess
 import numpy as np
 from time import sleep
@@ -167,7 +173,16 @@ class rxSDR(threading.Thread):
         
         return data, best_channel[1]
 
-    
+    @contextmanager
+    def suppress_stdout(self):
+        with open(os.devnull, 'w') as devnull:
+            old_stdout = sys.stdout
+            sys.stdout = devnull
+            try:
+                yield
+            finally:
+                sys.stdout = old_stdout
+                
     def send_channel_info(self, next_freq):
         '''This function blasts out the file for the next frequency to switch
         to, on the current frequency'''
@@ -207,7 +222,8 @@ class rxSDR(threading.Thread):
 
     def receive_channel_info(self):
         print("receiving on: " + str(current_freq_rx))
-        rx_2400_r2.main(None, None, rx_time, current_freq_rx*mhz)
+        with self.suppress_stdout():
+            rx_2400_r2.main(None, None, rx_time, current_freq_rx*mhz)
         output = extract_bits.main()
         print(output)
         return output
