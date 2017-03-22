@@ -23,7 +23,6 @@ from time import sleep
 import time
 import threading
 from pubsub import pub
-### Trial for new way to interact:
 import tx_2400_r2
 import rx_2400_r2
 import extract_bits
