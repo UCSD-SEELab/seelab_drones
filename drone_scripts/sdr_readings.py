@@ -33,8 +33,6 @@ khz = 1000.0
 RX_MIN_FREQ = 300 * mhz
 np.set_printoptions(precision=4)
 
-fcLow = 100
-fcHigh = 200
 fs = 0.4                                     # 0.4 MHz, 400 kHz
 f1 = 440
 f2 = 925
