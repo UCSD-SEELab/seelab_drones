@@ -186,7 +186,7 @@ class rxSDR(threading.Thread):
         # Don't worry about the first two args, can figure out if you look in
         # the GNU Radio script if you really care
         print("##### Transmitting on: " + str(current_freq_tx) + ' MHz')
-        print('Next transmission on: ' + str(next_freq) + ' MHz')
+        # print('Next transmission on: ' + str(next_freq) + ' MHz')
         print('')
         tx_2400_r2.main(None, None, tx_time, current_freq_tx*mhz, file)
 
@@ -197,8 +197,10 @@ class rxSDR(threading.Thread):
         chance to "hear" about the frequency change. Future SEELab members can
         add some ack upon frequency change to eliminate the need for this.'''
         global current_freq_tx
-        print("Changing tx freq from %d to %d MHz"%
+        print('')
+        print("@@@@@ Changing tx freq from %d to %d MHz"%
                 (current_freq_tx, next_freq))
+        print('')
         current_freq_tx = next_freq
         
     
