@@ -197,16 +197,21 @@ class rxSDR(threading.Thread):
         chance to "hear" about the frequency change. Future SEELab members can
         add some ack upon frequency change to eliminate the need for this.'''
         global current_freq_tx
+        print("Changing tx freq from %d to %d MHz"%
+                (current_freq_tx, next_channel))
         current_freq_tx = next_freq
         
     
     def change_rx_channel(self, next_freq):
         '''Same as above, but for Rx channel'''
         global current_freq_rx
+        print("Changing rx freq from %d to %d MHz"%(current_freq_rx, next_freq))
         current_freq_rx = next_freq
 
     def receive_channel_info(self):
-        print("Listening for messages on: " + str(current_freq_rx) + ' MHz...')
+        print('')
+        print("#####Listening for msg at: " + str(current_freq_rx) + ' MHz...')
+        print('')
         rx_2400_r2.main(None, None, rx_time, current_freq_rx*mhz)
         output = extract_bits.main()
         # print(output)
@@ -231,13 +236,12 @@ class rxSDR(threading.Thread):
                 self.send_channel_info(next_channel)
                 if time.time() - start_time >= tx_trans_time:
                     self.change_tx_channel(next_channel)
-                    print("Cmd to change tx channel sent")
                     start_time = time.time()
             
             if SLAVE:
                 next_freq = self.receive_channel_info()
                 if next_freq != -1:
+                    
                     self.change_rx_channel(next_freq)
-                    print("Cmd to change rx channel sent")
             
             time.sleep(self._delay)
