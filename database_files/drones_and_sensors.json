@@ -26,6 +26,18 @@
         {
             "name": "SDR1",
             "type": "SDR"
+        },
+		{
+            "name": "GPS2",
+            "type": "GPS"
+        },
+        {
+            "name": "RF2",
+            "type": "RF"
+        },
+        {
+            "name": "SDR2",
+            "type": "SDR"
         }
     ],
     "events":[
