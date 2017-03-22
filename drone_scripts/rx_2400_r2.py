@@ -23,7 +23,7 @@ import blade_rx
 
 class rx_2400_r2(gr.top_block):
 
-    def __init__(self, center_freq=446500000):
+    def __init__(self, center_freq=440000000):
         gr.top_block.__init__(self, "Rx 2400 R2")
 
         ##################################################
@@ -154,7 +154,7 @@ class rx_2400_r2(gr.top_block):
 def argument_parser():
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
     parser.add_option(
-        "-f", "--center-freq", dest="center_freq", type="intx", default=446500000,
+        "-f", "--center-freq", dest="center_freq", type="intx", default=440000000,
         help="Set center_freq [default=%default]")
     return parser
 
@@ -171,7 +171,7 @@ def main(top_block_cls=rx_2400_r2, options=None, rx_time=5, freq=None):
     start_time = time.time()
     
     while (time.time() - start_time < rx_time):
-        print('rx')
+        time.sleep(0.5)
     '''
     try:
         raw_input('Press Enter to quit: ')
