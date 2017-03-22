@@ -25,6 +25,8 @@ import extract_bits
 SAVE = False
 DATABASE = True
 FILENAME = "blade_2_5mhz.txt"
+MASTER = True
+SLAVE = False
 
 mhz = 1000000                          #can probably do as an int
 khz = 1000.0
