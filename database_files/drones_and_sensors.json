@@ -2,11 +2,11 @@
     "drones": [
         {
             "name": "Alpha",
-            "FAA_ID": "FA3FCCE4KC"
+            "FAA_ID": "michaels"
         },
         {
             "name": "Beta",
-            "FAA_ID": "FA3FCCE4KC"
+            "FAA_ID": "michaels"
         }
     ],
     "sensor_types": [
