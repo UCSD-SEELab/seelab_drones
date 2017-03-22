@@ -160,5 +160,4 @@ def main():
         freq = -1
     return freq
 
-x = main()
-print(x)
+main()
