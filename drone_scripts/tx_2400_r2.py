@@ -60,7 +60,7 @@ class tx_2400_r2(gr.top_block):
         self.osmosdr_sink_0.set_if_gain(0, 0)
         self.osmosdr_sink_0.set_bb_gain(txvga1, 0)
         self.osmosdr_sink_0.set_antenna("", 0)
-        self.osmosdr_sink_0.set_bandwidth(0, 0)
+        self.osmosdr_sink_0.set_bandwidth(1500000, 0)
           
         self.digital_gfsk_mod_0 = digital.gfsk_mod(
         	samples_per_symbol=sps,
