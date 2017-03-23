@@ -1,6 +1,6 @@
 {
     "mission_name":"bladeRF4",
-    "location":"Bear",
+    "location":"CSE2115",
     "drones": [
         {
             "name": "Alpha",
