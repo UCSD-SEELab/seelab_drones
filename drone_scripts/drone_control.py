@@ -335,7 +335,7 @@ class LoggerDaemon(threading.Thread):
             print 'entered sdr_data_cb'
             ### Experimental
             location_global = self._pilot.get_global_location()
-            if location_global is not None:
+            if self._pilot.vehicle.location is not None:
                 # location_global.insert(0, 'global')
                 location_local = self.rel_from_glob(location_global)
                 # location_local.insert(0, 'local')
