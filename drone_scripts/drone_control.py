@@ -337,7 +337,7 @@ class LoggerDaemon(threading.Thread):
             location_global = self._pilot.get_global_location()
             if location_global is not None:
                 # location_global.insert(0, 'global')
-                location_local = self.rel_from_global(location_global)
+                location_local = self.rel_from_glob(location_global)
                 # location_local.insert(0, 'local')
                 current_velocity.insert(0, ['global', location_global])
                 current_velocity.insert(0, ['local', location_local])
