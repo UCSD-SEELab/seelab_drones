@@ -12,8 +12,10 @@ TODO: find a way to suppress the bladeRF/GNU Radio output for cleaner terminal
 '''
 
 ### Only enable one or the other, not both!
-MASTER = True                               # master determines freq to tx on
+MASTER = False                               # master determines freq to tx on
 SLAVE = False
+BEACON_RX = True                           # check signal strength from beacon
+BEACON_FREQ = 440                           # only if BEACON_RX
 
 import blade_rx as blade
 import os
@@ -143,32 +145,45 @@ class rxSDR(threading.Thread):
         # store best channel data in form [avg of fft, frequency in MHz]
         best_channel = [3000, fc]
         
-        for x in fc_list:
-            data.append([])
-            self.setFc(x, 'mhz', 'rx')
+        if not BEACON_RX:
+            for x in fc_list:
+                data.append([])
+                self.setFc(x, 'mhz', 'rx')
             
-            if ((time.time() - now) < 0.025): time.sleep(0.025 - (time.time()-now)) # allow PLL to settle
+                if ((time.time() - now) < 0.025): time.sleep(0.025 - (time.time()-now)) # allow PLL to settle
             
-            freqs = self.getFrequencies(NFFT)
+                freqs = self.getFrequencies(NFFT)
             
-            if SAVE:
-                with open(FILENAME, 'a') as f:
-                    f.write(','.join(map(str, np.round(freqs, NUM_DECIMAL))) + '\n')
-            if DATABASE:
-                params = ['freq',x,'fs',fs,'mhz','nfft',NFFT]
-                freqs = freqs.tolist()
-                freqs.insert(0, params)
+                if SAVE:
+                    with open(FILENAME, 'a') as f:
+                        f.write(','.join(map(str, np.round(freqs, NUM_DECIMAL))) + '\n')
+                if DATABASE:
+                    params = ['freq',x,'fs',fs,'mhz','nfft',NFFT]
+                    freqs = freqs.tolist()
+                    freqs.insert(0, params)
             
-            data[i].append(freqs)
-            i = i + 1
-            fft_avg = sum(freqs[1:NFFT+1]) / float(len(freqs[1:NFFT+1]))
-            if fft_avg < best_channel[0]:
-                best_channel[0] = fft_avg
-                best_channel[1] = x
+                data[i].append(freqs)
+                i = i + 1
+                fft_avg = sum(freqs[1:NFFT+1]) / float(len(freqs[1:NFFT+1]))
+                if fft_avg < best_channel[0]:
+                    best_channel[0] = fft_avg
+                    best_channel[1] = x
 
-        # print("Scan required " + str(time.time() - now) + " seconds")
-        data.insert(0, ['best_channel', best_channel[1]])
-        return data, best_channel[1]
+            # print("Scan required " + str(time.time() - now) + " seconds")
+            data.insert(0, ['best_channel', best_channel[1]])
+            return data, best_channel[1]
+        else:
+            # Best channel will be scanned channel
+            self.setFc(BEACON_FREQ, 'mhz', 'rx')
+            freqs = self.getFrequencies(NFFT)
+            params = ['BEACON_RX', 'freq', BEACON_FREQ, 'fs', fs, 'mhz', 'nfft', NFFT]
+            freqs = freqs.tolist()
+            freqs = freqs[int(0.4 * NFFT):int(0.6*NFFT)]
+            fft_avg = sum(freqs) / float(len(freqs))
+            freqs.insert(0, params)
+            data = freqs
+            data.insert(0, ['avg', fft_avg])
+            return data, BEACON_FREQ
 
                 
     def send_channel_info(self, next_freq):
@@ -249,3 +264,7 @@ class rxSDR(threading.Thread):
                 if next_freq != -1:
                     self.change_rx_channel(next_freq)
                 time.sleep(self._slave_delay)
+            
+            if BEACON_RX:
+                print("#####Avg power in band: " + str(data[0][1]))
+                time.sleep(2)
