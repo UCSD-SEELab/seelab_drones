@@ -12,8 +12,8 @@ TODO: find a way to suppress the bladeRF/GNU Radio output for cleaner terminal
 '''
 
 ### Only enable one or the other, not both!
-MASTER = True                               # master determines freq to tx on
-SLAVE = False
+MASTER = False                               # master determines freq to tx on
+SLAVE = True
 
 import blade_rx as blade
 import os
@@ -242,10 +242,10 @@ class rxSDR(threading.Thread):
                 if time.time() - start_time >= tx_trans_time:
                     self.change_tx_channel(next_channel)
                     start_time = time.time()
-                self.sleep(self._master_delay)
+                time.sleep(self._master_delay)
             
             if SLAVE:
                 next_freq = self.receive_channel_info()
                 if next_freq != -1:
                     self.change_rx_channel(next_freq)
-                self.sleep(self._slave_delay)
+                time.sleep(self._slave_delay)
