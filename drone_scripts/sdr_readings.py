@@ -45,7 +45,7 @@ fc = f1                                      # default frequency in MHz
 current_freq_rx = fc
 current_freq_tx = fc
 tx_time = 5                                  # num seconds to tx msg for
-rx_time = 5                                  # num seconds to rx msg for
+rx_time = 6                                  # num seconds to rx msg for
 tx_trans_time = 30                           # seconds before switch freq
 lnagain = 6
 rxvga1 = 30
@@ -61,7 +61,8 @@ class rxSDR(threading.Thread):
 
     def __init__(self):
         super(rxSDR, self).__init__()
-        self._delay = 10
+        self._master_delay = 7
+        self._slave_delay = 8
         self.daemon = True
         # Configure SDR parameters
         self.sdr = blade.blade_rf_sdr(1)         # init bladeRF, load FPGA
