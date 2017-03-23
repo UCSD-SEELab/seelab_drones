@@ -331,6 +331,14 @@ class LoggerDaemon(threading.Thread):
         #print "sdr callback entered: {}".format(arg1)
         current_time = self.mission_time()
         current_velocity=self._pilot.get_velocity()
+        ### Experimental
+        location_global = self._pilot.get_global_location()
+        location_global.insert(0, 'global')
+        location_local = self.rel_from_global(location_global)
+        location_local.insert(0, 'local')
+        current_velocity.append(location_global)
+        current_velocity.append(location_local)
+        ### END
         if current_time is not None:
             print 'entered sdr_data_cb'
             data = copy.deepcopy(arg1)
@@ -493,7 +501,7 @@ class Pilot(object):
         # Test out adding SDR
         sdr_readings.rxSDR()
 
-        LoggerDaemon(self, "Alpha")
+        LoggerDaemon(self, "Beta")
 
     def bringup_drone(self, connection_string=None):
         """Connect to a dronekit vehicle or instantiate an sitl simulator.
