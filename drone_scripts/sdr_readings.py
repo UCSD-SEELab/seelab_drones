@@ -12,8 +12,8 @@ TODO: find a way to suppress the bladeRF/GNU Radio output for cleaner terminal
 '''
 
 ### Only enable one or the other, not both!
-MASTER = True                               # master determines freq to tx on
-SLAVE = False
+MASTER = False                               # master determines freq to tx on
+SLAVE = True
 
 import blade_rx as blade
 import os
@@ -166,7 +166,7 @@ class rxSDR(threading.Thread):
                 best_channel[1] = x
 
         # print("Scan required " + str(time.time() - now) + " seconds")
-        
+        data.insert(0, ['best_channel', best_channel[1]])
         return data, best_channel[1]
 
                 
