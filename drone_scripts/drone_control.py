@@ -336,11 +336,11 @@ class LoggerDaemon(threading.Thread):
             ### Experimental
             location_global = self._pilot.get_global_location()
             if location_global is not None:
-                location_global.insert(0, 'global')
+                # location_global.insert(0, 'global')
                 location_local = self.rel_from_global(location_global)
-                location_local.insert(0, 'local')
-                current_velocity.append(location_global)
-                current_velocity.append(location_local)
+                # location_local.insert(0, 'local')
+                current_velocity.insert(0, ['global', location_global])
+                current_velocity.insert(0, ['local', location_local])
             else:
                 current_velocity.append(['no global', 'no local'])
             ### END
@@ -504,7 +504,7 @@ class Pilot(object):
         # Test out adding SDR
         sdr_readings.rxSDR()
 
-        LoggerDaemon(self, "Beta")
+        LoggerDaemon(self, "Alpha")
 
     def bringup_drone(self, connection_string=None):
         """Connect to a dronekit vehicle or instantiate an sitl simulator.
