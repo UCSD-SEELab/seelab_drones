@@ -445,7 +445,7 @@ if __name__ == '__main__':
 
     #dc.demo_control_loop()
     dc.launch_drone(dc.primary_drone_addr)
-    if dc.secondary_drone_addr is not None:
+    if dc.secondary_drone_addr:
         dc.launch_drone(dc.secondary_drone_addr)
     #dc.run_test_mission('courtyard1.json', dc.primary_drone_addr)
     interact(local=locals())
