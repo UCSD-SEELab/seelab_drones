@@ -67,6 +67,8 @@ class DroneCoordinator(object):
         self.primary_drone_addr = 'http://' + primary_drone_ip + ':5000/'
         if secondary_drone_ip:
             self.secondary_drone_addr = 'http://' + secondary_drone_ip + ':5000/'
+        else:
+            self.secondary_drone_addr = None
         self.primary_height = 3
         self.secondary_height = 5
 
@@ -445,7 +447,7 @@ if __name__ == '__main__':
 
     #dc.demo_control_loop()
     dc.launch_drone(dc.primary_drone_addr)
-    if dc.secondary_drone_addr:
+    if dc.secondary_drone_addr is not None:
         dc.launch_drone(dc.secondary_drone_addr)
     #dc.run_test_mission('courtyard1.json', dc.primary_drone_addr)
     interact(local=locals())
