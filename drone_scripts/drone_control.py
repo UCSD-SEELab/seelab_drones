@@ -331,16 +331,19 @@ class LoggerDaemon(threading.Thread):
         #print "sdr callback entered: {}".format(arg1)
         current_time = self.mission_time()
         current_velocity=self._pilot.get_velocity()
-        ### Experimental
-        location_global = self._pilot.get_global_location()
-        location_global.insert(0, 'global')
-        location_local = self.rel_from_global(location_global)
-        location_local.insert(0, 'local')
-        current_velocity.append(location_global)
-        current_velocity.append(location_local)
-        ### END
         if current_time is not None:
             print 'entered sdr_data_cb'
+            ### Experimental
+            location_global = self._pilot.get_global_location()
+            if location_global is not None:
+                location_global.insert(0, 'global')
+                location_local = self.rel_from_global(location_global)
+                location_local.insert(0, 'local')
+                current_velocity.append(location_global)
+                current_velocity.append(location_local)
+            else:
+                current_velocity.append(['no global', 'no local'])
+            ### END
             data = copy.deepcopy(arg1)
             with self.scoped_session() as session:
                 merged_sensor = session.merge(self.SDR_sensor)
