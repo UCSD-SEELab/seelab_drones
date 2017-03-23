@@ -1,6 +1,6 @@
 {
-    "mission_name":"bladeRF5",
-    "location":"CSE2115",
+    "mission_name":"bladeRF6",
+    "location":"BlackMountain",
     "drones": [
         {
             "name": "Alpha",
