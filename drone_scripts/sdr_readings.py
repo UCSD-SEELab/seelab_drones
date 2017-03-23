@@ -12,8 +12,8 @@ TODO: find a way to suppress the bladeRF/GNU Radio output for cleaner terminal
 '''
 
 ### Only enable one or the other, not both!
-MASTER = False                               # master determines freq to tx on
-SLAVE = True
+MASTER = True                               # master determines freq to tx on
+SLAVE = False
 
 import blade_rx as blade
 import os
