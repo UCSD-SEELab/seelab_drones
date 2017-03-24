@@ -13,8 +13,8 @@ TODO: find a way to suppress the bladeRF/GNU Radio output for cleaner terminal
 
 ### Only enable one or the other, not both!
 MASTER = False                               # master determines freq to tx on
-SLAVE = False
-BEACON_RX = True                           # check signal strength from beacon
+SLAVE = True
+BEACON_RX = False                           # check signal strength from beacon
 BEACON_FREQ = 440                           # only if BEACON_RX
 
 import blade_rx as blade
@@ -46,7 +46,7 @@ f3 = 1270
 fc = f1                                      # default frequency in MHz
 current_freq_rx = fc
 current_freq_tx = fc
-tx_time = 5                                  # num seconds to tx msg for
+tx_time = 7                                  # num seconds to tx msg for
 rx_time = 6                                  # num seconds to rx msg for
 tx_trans_time = 30                           # seconds before switch freq
 lnagain = 6
@@ -250,6 +250,10 @@ class rxSDR(threading.Thread):
             data, next_channel = self.get_reading(fc_list)
             
             if data is not None:                     # if successful
+                if MASTER:
+                    data.insert(0, ['c:', current_freq_tx, 'n:', next_channel])
+                if SLAVE:
+                    data.insert(0, ['c_rx:', current_freq_rx])
                 self._callback(data)                 # send the data to be logged
             
             if MASTER:
