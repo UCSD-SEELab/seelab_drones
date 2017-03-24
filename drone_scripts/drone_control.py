@@ -328,26 +328,21 @@ class LoggerDaemon(threading.Thread):
     ### Won't work until database is configured properly
     def sdr_data_cb(self, arg1=None):
         """Add incoming SDR data to the database."""
-        #print "sdr callback entered: {}".format(arg1)
         current_time = self.mission_time()
         current_velocity=self._pilot.get_velocity()
         if current_time is not None:
             print 'entered sdr_data_cb'
-            ### Experimental
             location_global = self._pilot.get_global_location()
             if (location_global
                     and location_global.lat
                     and location_global.lon
                     and location_global.alt
                     and current_time):
-                # location_global.insert(0, 'global')
                 location_local = self.rel_from_glob(location_global)
-                # location_local.insert(0, 'local')
-                current_velocity.insert(0, ['global', location_global])
+                location_local.insert(0, 'local')
                 current_velocity.insert(0, ['local', location_local])
             else:
                 current_velocity.append(['no global', 'no local'])
-            ### END
             data = copy.deepcopy(arg1)
             with self.scoped_session() as session:
                 merged_sensor = session.merge(self.SDR_sensor)
@@ -421,6 +416,9 @@ class LoggerDaemon(threading.Thread):
     def GPS_recorder(self):
         """Record the drone's current GPS location every half second."""
         # Something better than while True? Thread is already a daemon I guess
+        #TODO: I found a bug where if the home gps coordinates get messed up
+        # data won't be logged. Maybe add some safety when calling
+        # rel_from_glob as it happens there. -Stephen
         while True:
             location_global = self._pilot.get_global_location()
             current_time = self.mission_time()
@@ -508,7 +506,7 @@ class Pilot(object):
         # Test out adding SDR
         sdr_readings.rxSDR()
 
-        LoggerDaemon(self, "Alpha")
+        LoggerDaemon(self, "Beta")
 
     def bringup_drone(self, connection_string=None):
         """Connect to a dronekit vehicle or instantiate an sitl simulator.
