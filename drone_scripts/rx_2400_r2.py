@@ -4,6 +4,30 @@
 # GNU Radio Python Flow Graph
 # Title: Rx 2400 R2
 # Generated: Sun Mar 19 20:12:40 2017
+# 
+# General comments on this file:
+# This file is used to interface with the bladeRF to receive
+# data at 2530 bits per second (approx. 2.4k baud, hence the
+# file name). The meat of this file was generated using GNU
+# Radio from a simple FSK receiver that I designed 
+# (use that file as a reference to learn how to do future
+# designs - it is titled *.grc wheree * is something similar
+# to the title of this file). I made a few modifications to
+# this file (many of which are detailed in bladerf_readme.txt),
+# and you will have to make similar modifications to future
+# designs to make it work on the Raspberry Pi and interface
+# with existing software. The mods I made are by no means the
+# best way to do things, so feel free to be creative. The
+# most important one for running this on a Pi is to load the
+# FPGA image (using stuff from blade_rx.py) - you cannot
+# really interface with BladeRF without.
+# 
+# Note: the baud rate in here is different than the baud rate
+# in the transmitter file. This is mostly an experimental
+# result. FSK clock recovery was more successful in field
+# testing using 2530 vs 2490. When you design transceiver
+# systems you will likely need to do similar testing to make
+# necessary tweaks to make communication more reliable.
 ##################################################
 
 from gnuradio import analog

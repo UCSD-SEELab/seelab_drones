@@ -5,6 +5,15 @@ This file exists mostly to test features that I add to the rxSDR class
 Can now smell radio waves. Plots speed improved by 2-3x.
 1/24:    changed freq range to BW around center freq so useful to scan
 1/26:    adding ability to print to a file
+
+Genereal Overview:
+This script is written for the RTL SDR to scan FM frequencies (or really
+anything within the hardware range - ~20-~1800 MHz) and save or plot the
+fft of the spectrum. You will likely not use this, but it may be good to
+learn off of or to use to debug your BladeRF communications.
+
+I found the rtl-sdr very handy for debugging communication when I was
+setting up communication between the two drones.
 '''
 
 PLOT = False

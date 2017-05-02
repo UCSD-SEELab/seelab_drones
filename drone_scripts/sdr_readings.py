@@ -9,10 +9,26 @@ HAM or ISM bands.
 NOTE: You must have a HAM radio license to do any transmitting!
 
 TODO: find a way to suppress the bladeRF/GNU Radio output for cleaner terminal
+
+General overview:
+This script basically runs the show when it comes to bladeRF FSK communication.
+Only one drone should be the master and theoretically any number can be slaves.
+In this current basic implementation only the master gets to decide which freq.
+to communicate on. It then sends out a message to inform the slave drones which
+frequency they should listen on. Once a slave drone successfully gets a message
+to change frequency it will hop over to the new frequency (that the master
+determined to be "optimal"). After the master has determined an optimal frequency
+it will transmit a message to switch to that frequency (at it's current/previous
+frequency) for a set amount of time ("tx_trans_time", in seconds), then switch over
+to the new freq. Each time the master transmits it will broadcast for "tx_time"
+seconds and then go to sleep. Each slave will listen for "rx_time" seconds
+between sleeping. You are free to mess around with these, but I found these
+times to work well so that the drones don't "lose" each other (never exchange
+messages on the right freq) in basic indoor and outdoor testing.
 '''
 
-### Only enable one or the other, not both!
-MASTER = False                               # master determines freq to tx on
+### Only enable one or the other, not both (cannot be master and slave)!
+MASTER = False                              # master determines freq to tx on
 SLAVE = True
 BEACON_RX = False                           # check signal strength from beacon
 BEACON_FREQ = 440                           # only if BEACON_RX
@@ -229,6 +245,8 @@ class rxSDR(threading.Thread):
         current_freq_rx = next_freq
 
     def receive_channel_info(self):
+	    '''Listen for a message at current freq and then check the record to
+		see if it successfully got a message'''
         print('')
         print("#####Listening for msg at: " + str(current_freq_rx) + ' MHz...')
         print('')

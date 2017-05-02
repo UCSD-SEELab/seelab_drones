@@ -1,6 +1,8 @@
 '''
 This will be a class to do basic receive operations on the BladeRF running
-the 1.9.1 firmware. Ideally it will work on a laptop or drone, and the user
+the 1.9.1 firmware. 
+
+It will work on a laptop (Windows at least) or drone, and the user
 will just have to identify whether he/she is using USB2/3 and if machine is
 drone or laptop. To start it will just interface with BladeRF CLI. Good
 documentation can be found here: 
@@ -10,6 +12,11 @@ Do not attempt to use this without a basic understanding of how RF stuff works
 or you may damage the board. At the very least read through this:
 https://github.com/Nuand/bladeRF/wiki/Getting-Started%3A-Verifying-Basic-Device-Operation#Loading_the_FPGA
 
+
+General overview:
+Likely the only truely useful stuff in here will be loading the FPGA image if used
+on a raspberry pi (when gnuradio and bladerf software installed on windows the
+image will load automatically). 
 '''
 
 interface = 'USB2' # make this automatic. Hi-Speed vs SuperSpeed
@@ -46,6 +53,7 @@ class blade_rf_sdr():
             subprocess.check_output([prefix, '-v', verbosity])
             # print('drone')
     
+	# find device connected to usb
     def find_device(self, num_attempts, delay):
         while True:
             num_attempts = num_attempts - 1
@@ -63,7 +71,7 @@ class blade_rf_sdr():
     def open_blade(self, id):
         print("may be useless")
     
-    
+    # send a "command" sort of operation to the bladeRF
     def send_command(self, cmd):
         output = None
         args = cmd.split(" ")
@@ -73,7 +81,8 @@ class blade_rf_sdr():
         except:
             print("Error sending '" + cmd + "' to bladeRF")
     
-    
+    # send an "execution" sort of operation to the bladeRF
+	# Look in documentation for distinction between exec/cmd if you care
     def send_exec(self, cmd):
         exec_cmd = [prefix, '-e', cmd]
         try:
@@ -120,7 +129,7 @@ class blade_rf_sdr():
                 self.fpga_path = filepath
             self.send_command('-l' + " " + self.fpga_path)
     
-    
+    #sets the sample rate
     def set_sample_rate(self, sample_freq):
         #sample_cmd = [prefix, '-e', 'set', 'samplerate', 'rx', str(sample_freq) + 'M']
         sample_cmd = ('set samplerate rx ' + str(sample_freq) + 'M')

@@ -1,12 +1,10 @@
 '''
-Inspired by the work of Tony DiCola at adafruit and [whoever wrote rtlsdr()]
+Written by Stephen Wayne
+
+Inspired by the work of Tony DiCola at adafruit and [whoever wrote rtlsdr]
 
 rxSDR is a class to interact with a XXXXX SDR receiver. I may add spectrum
 visualization down the road if I figure it out and feel it's necessary.
-
-Actually, real time visualization while flying sounds like a great idea!
-
-Using work from "-----"
 
 Using Adafruit's SDR Receiver USB stick - 
    RTL2832 w/ R820T
@@ -23,6 +21,14 @@ Super awesome resource:
 http://www.superkuh.com/rtlsdr.html
 
 This version of the file tries to use threading to integrate with drone
+
+General overview:
+This function uses the RTL SDR (cheap one) to scan the frequencies listed
+in "fc_list" and save the fft (frequency spectrum) to the database or a
+text file. This can be good for debugging communication or learning how
+to do some of this stuff, but probably won't be useful for other practical
+purposes. It is something I developed while learning how to do SDR stuff,
+so making something like this on your own may be a good learning tool.
 '''
 
 import rtlsdr as rtl
@@ -64,8 +70,9 @@ class rxSDR(threading.Thread):
         self.setFs(fs, "mhz")
         
         self.start()
-
-    def setBwKhz(self, bw_khz):     # does not work for some reason?
+		
+	
+    def setBwKhz(self, bw_khz):     # this is useless
         self.sdr.set_bandwidth(bw_khz*khz)
 
     def setGain(self, gain_dB = "auto"): # input gain in dB, "auto" by default
@@ -74,14 +81,14 @@ class rxSDR(threading.Thread):
     def getGain(self):                   # get tuner gain in dB
         return self.sdr.get_gain()
 
-    def getGains(self, unit = ".1dB"):  # default to output in 0.1dB
+    def getGains(self, unit = ".1dB"):  # get gain from each stage of receiver (default to output in 0.1dB)
         gains = self.sdr.get_gains()
         if (unit == "dB"):
             gainsdB = [i / 10.0 for i in gains]
             return gainsdB
         else: return gains
 
-    def printGain(self):
+    def printGain(self):                 # print receiver gain
         print("gain=" + str(self.getGain()) + " dB")
 
     def printGains(self, unit = ".1dB"):   # print out gains. defaults to 0.1dB
@@ -90,7 +97,7 @@ class rxSDR(threading.Thread):
             print("gains (dB):" + "\n" + str(gains))
         else: print("gains (0.1dB): " + "\n" + str(gains))
 
-    def setFc(self, Fc, unit = "mhz"):
+    def setFc(self, Fc, unit = "mhz"):     # set center frequency (default to mhz)
         if (unit == "hz"):             Fc = Fc
         elif (unit == "khz"):          Fc = Fc * khz
         else:                          Fc = Fc * mhz
@@ -109,7 +116,7 @@ class rxSDR(threading.Thread):
         if ((unit != "khz") and (unit != "hz")): unit = "mhz"
         print("Fc=" + str(self.getFc(unit)) + " " + unit)
 
-    def setFs(self, Fs, unit = "hz"):     # default to Hz
+    def setFs(self, Fs, unit = "hz"):     # set sample frequency (default to Hz)
         if (unit == "khz"): self.sdr.set_sample_rate(Fs * khz)
         elif (unit == "mhz"): self.sdr.set_sample_rate(Fs * mhz)
         else: self.sdr.set_sample_rate(Fs)
@@ -125,7 +132,7 @@ class rxSDR(threading.Thread):
         print("Fs=" + str(self.getFs(unit)) + " " + unit)
 
     # inspired by Adafruit's model.py get_data function
-    def getFrequencies(self, nfft):
+    def getFrequencies(self, nfft):    # get spectrum (fft) of the current center frequency
         # Get width number of raw samples so the number of frequency bins is
 		# the same as the display width.  Add two because there will be mean/DC
 		# values in the results which are ignored.
@@ -141,12 +148,12 @@ class rxSDR(threading.Thread):
         freqs = 20.0*np.log10(freqs)
         return freqs
     
-    def _callback(self, sdr_data):
+    def _callback(self, sdr_data):     # how we communicate messages between threads
         pub.sendMessage("sensor-messages.sdr-data", arg1=sdr_data)
     
     def get_reading(self, fc_list):
         '''
-        This function tests features that I add to the rxSDR class
+        Get the spectrum of freqs in fc_list, store to database and/or file
         '''
 
         # radio = rxSDR(30, fs, bw, gain)  # radio on RPi
